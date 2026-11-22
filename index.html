@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F2F2F7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="My Skin">
+<title>My Skin · Kunjal</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F2F7; --surf:#FFFFFF; --surf2:#F2F2F7; --ink:#111318; --body:#3C3F48; --muted:#8A8D97; --line:rgba(17,19,24,.08);
+  --am1:#FDBA4D; --am2:#F2762E; --amt:#FFF3E6; --amd:#B4520E;
+  --pm1:#7C83FF; --pm2:#4338CA; --pmt:#EEF0FF; --pmd:#3730A3; --acc:#4338CA;
+  --gr:#16A34A; --grt:#E8F7EE; --grd:#166534;
+  --rd:#E5484D; --rdt:#FDECEC; --rdd:#9F1D21;
+  --shadow:0 1px 2px rgba(16,24,40,.04), 0 6px 20px rgba(16,24,40,.05);
+  --safe-b: env(safe-area-inset-bottom, 0px); --safe-t: env(safe-area-inset-top, 0px);
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
+  --disp: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#000; --surf:#1C1C1E; --surf2:#2C2C2E; --ink:#F5F5F7; --body:#D1D1D6; --muted:#8E8E93; --line:rgba(255,255,255,.1);
+    --amt:#3A2410; --amd:#FDBA74; --pmt:#1E1B4B; --pmd:#C7D2FE; --acc:#8B92FF; --grt:#0E2A19; --grd:#86EFAC; --rdt:#3B1214; --rdd:#FCA5A5;
+    --shadow:none; }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);-webkit-font-smoothing:antialiased;letter-spacing:-.01em}
+button{font:inherit;color:inherit;border:0;background:none;padding:0;cursor:pointer;letter-spacing:inherit}
+input{font:inherit}
+h1,h2,h3{font-family:var(--disp);margin:0;letter-spacing:-.02em}
+#app{max-width:560px;margin:0 auto;min-height:100vh;padding:calc(10px + var(--safe-t)) 16px calc(96px + var(--safe-b))}
+/* header */
+.hd{display:flex;align-items:flex-end;gap:12px;padding:8px 4px 14px}
+.hd .t{flex:1;min-width:0}
+.hd small{display:block;font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.hd h1{font-size:31px;font-weight:800;line-height:1.1;margin-top:2px}
+.streak{display:inline-flex;align-items:center;gap:5px;font-weight:700;font-size:14px;padding:8px 12px;border-radius:999px;background:var(--surf);box-shadow:var(--shadow);flex:none}
+/* week strip */
+.week{background:var(--surf);border-radius:22px;padding:10px 6px 10px;box-shadow:var(--shadow);margin-bottom:14px}
+.weekhd{display:flex;align-items:center;justify-content:space-between;padding:0 6px 6px 10px}
+.weekhd b{font-size:15px;font-weight:700}
+.weekhd span{font-size:13px;color:var(--muted);font-weight:600}
+.weekhd .nav{display:flex;gap:6px}
+.ib{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--surf2);color:var(--ink);flex:none}
+.ib:disabled{opacity:.3}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.dp{display:flex;flex-direction:column;align-items:center;gap:4px;padding:7px 0 6px;border-radius:16px;font-weight:600}
+.dp small{font-size:11px;color:var(--muted);font-weight:700}
+.dp .rg{position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700}
+.dp .rg svg{position:absolute;inset:0}
+.dp.sel{background:var(--ink);color:var(--bg)}
+.dp.sel small{color:var(--bg);opacity:.7}
+.dp.fut{opacity:.35}
+.dp.today:not(.sel) .rg,.dp.today:not(.sel) small{color:var(--acc)}
+/* segmented */
+.seg{display:grid;grid-template-columns:1fr 1fr;background:rgba(118,118,128,.12);border-radius:14px;padding:3px;margin-bottom:14px}
+.seg button{display:flex;align-items:center;justify-content:center;gap:7px;padding:9px 0;border-radius:11px;font-weight:700;font-size:15px;color:var(--body)}
+.seg button.on{background:var(--surf);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.seg i{font-style:normal;font-size:12px;font-weight:700;color:var(--muted);background:rgba(118,118,128,.14);padding:1px 7px;border-radius:999px}
+/* hero */
+.hero{position:relative;overflow:hidden;border-radius:26px;padding:20px;color:#fff;margin-bottom:14px}
+.hero.am{background:linear-gradient(135deg,var(--am1),var(--am2))}
+.hero.pm{background:linear-gradient(135deg,var(--pm1),var(--pm2))}
+.hero.done{background:linear-gradient(135deg,#4ADE80,#15803D)}
+.hero::after{content:"";position:absolute;right:-40px;top:-50px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.13)}
+.hrow{display:flex;align-items:center;gap:16px;position:relative;z-index:1}
+.hero .lbl{font-size:12.5px;font-weight:700;opacity:.85;text-transform:uppercase;letter-spacing:.06em}
+.hero h2{font-size:24px;font-weight:800;line-height:1.15;margin:3px 0 8px}
+.hero .tag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.22);padding:5px 11px;border-radius:999px;font-size:13px;font-weight:700}
+.hero .cta{position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:16px;padding:14px;border-radius:16px;background:#fff;font-weight:800;font-size:16px}
+.hero.am .cta{color:#D9601A} .hero.pm .cta{color:#4338CA} .hero.done .cta{color:#15803D}
+.nudge{display:flex;align-items:center;gap:10px;border-radius:16px;padding:12px 14px;margin-bottom:12px;font-weight:600;font-size:14.5px;line-height:1.4;background:var(--surf);box-shadow:var(--shadow)}
+.nudge svg{flex:none}
+/* chips */
+.pills{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:9px 14px 9px 10px;border-radius:999px;background:var(--surf);box-shadow:var(--shadow);font-weight:700;font-size:14px;color:var(--body)}
+.pill .dot{width:20px;height:20px;border-radius:50%;border:2px solid #C7C7CC;display:flex;align-items:center;justify-content:center}
+.pill.on{background:var(--ink);color:var(--bg)}
+.pill.on .dot{border-color:var(--gr);background:var(--gr)}
+.pill.on .dot::after{content:"";width:6px;height:10px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:translateY(-1px) rotate(45deg)}
+.note{display:flex;gap:10px;align-items:flex-start;border-radius:16px;padding:12px 14px;margin-bottom:12px;font-size:14px;font-weight:600;line-height:1.45}
+.note svg{flex:0 0 20px;margin-top:1px}
+/* list */
+.list{background:var(--surf);border-radius:22px;box-shadow:var(--shadow);overflow:hidden;margin-bottom:14px}
+.item{display:flex;align-items:center;gap:12px;padding:11px 10px 11px 14px;position:relative}
+.item + .item::before{content:"";position:absolute;left:120px;right:0;top:0;height:1px;background:var(--line)}
+.chk{flex:0 0 30px;width:30px;height:30px;border-radius:50%;border:2.2px solid #C7C7CC;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.am-c .chk{border-color:var(--am1)} .pm-c .chk{border-color:var(--pm1)}
+.item.done .chk{background:var(--gr);border-color:var(--gr)}
+.chk svg{opacity:0;transform:scale(.5);transition:all .2s}
+.item.done .chk svg{opacity:1;transform:scale(1)}
+.chk:active{transform:scale(.88)}
+.th{flex:0 0 52px;width:52px;height:52px;border-radius:14px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,0,0,.06)}
+.th img{width:100%;height:100%;object-fit:contain}
+.th .sv{height:46px;width:auto}
+.it{flex:1;min-width:0;text-align:left}
+.it small{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase}
+.am-c .it small{color:var(--amd)} .pm-c .it small{color:var(--pmd)}
+.it b{display:block;font-size:15.5px;font-weight:600;line-height:1.25;margin:2px 0 1px}
+.it span{font-size:13px;color:var(--muted);font-weight:500}
+.item.done .it b{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(138,141,151,.6)}
+.item.done .th{opacity:.55}
+.opt{font-size:10.5px;font-weight:700;color:var(--muted);background:var(--surf2);padding:2px 7px;border-radius:999px;text-transform:none;letter-spacing:0}
+.star{font-size:10px;font-weight:800;color:#fff;background:var(--am2);padding:2px 7px;border-radius:999px;letter-spacing:.04em}
+.pm-c .star{background:var(--pm2)}
+.chev{color:#C7C7CC;flex:none}
+.card{background:var(--surf);border-radius:22px;box-shadow:var(--shadow);padding:16px;margin-bottom:14px}
+.card h3{font-size:17px;font-weight:700;margin-bottom:5px}
+.card p{margin:0;font-size:14.5px;color:var(--body);line-height:1.45;font-weight:500}
+.coming{display:flex;gap:12px;align-items:center}
+.coming .th{flex:0 0 48px;width:48px;height:48px}
+.coming b{display:block;font-size:12px;font-weight:800;color:var(--gr);text-transform:uppercase;letter-spacing:.04em}
+.coming span{font-size:15px;font-weight:600;line-height:1.3}
+.sech{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin:20px 6px 8px}
+/* tab bar */
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:8;background:rgba(249,249,251,.82);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--line);padding:6px 8px calc(4px + var(--safe-b));display:flex;justify-content:center}
+@media (prefers-color-scheme: dark){ .tabs{background:rgba(22,22,24,.82)} }
+.tabs .in{display:flex;max-width:560px;width:100%}
+.tabs button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 0;font-size:11px;font-weight:600;color:var(--muted)}
+.tabs button.on{color:var(--acc)}
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:20;opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.on{opacity:1;pointer-events:auto}
+.sheet{visibility:hidden;position:fixed;left:0;right:0;bottom:0;z-index:21;max-width:560px;margin:0 auto;background:var(--bg);border-radius:28px 28px 0 0;max-height:93vh;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateY(105%);transition:transform .35s cubic-bezier(.2,.85,.25,1), visibility 0s .35s;padding:0 16px calc(20px + var(--safe-b))}
+.sheet.on{transform:none;visibility:visible;transition:transform .35s cubic-bezier(.2,.85,.25,1)}
+.grab{width:38px;height:5px;border-radius:9px;background:rgba(120,120,128,.35);margin:9px auto 8px}
+.x{position:absolute;right:16px;top:16px;width:32px;height:32px;border-radius:50%;background:rgba(118,118,128,.16);display:flex;align-items:center;justify-content:center;color:var(--muted);z-index:2}
+/* product block (sheet + guided mode) */
+.prod{display:flex;flex-direction:column;align-items:center;text-align:center;padding:8px 0 4px}
+.ph{width:176px;height:176px;border-radius:32px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:var(--shadow);border:1px solid rgba(0,0,0,.05)}
+.ph img{width:100%;height:100%;object-fit:contain}
+.ph .sv{height:148px;width:auto}
+.prod small{display:block;margin-top:16px;font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.prod h2{font-size:24px;font-weight:800;line-height:1.2;margin:4px 12px 10px}
+.amtp{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:14px;padding:7px 14px;border-radius:999px;background:var(--surf);box-shadow:var(--shadow)}
+.does{font-size:16px;line-height:1.5;color:var(--body);font-weight:500;margin:14px 6px 4px;text-align:center}
+.steps{list-style:none;margin:0;padding:4px 0;counter-reset:s}
+.steps li{counter-increment:s;display:flex;gap:12px;align-items:flex-start;padding:11px 14px;font-size:15.5px;line-height:1.4;font-weight:500;position:relative}
+.steps li + li::before{content:"";position:absolute;left:52px;right:0;top:0;height:1px;background:var(--line)}
+.steps li::after{content:counter(s);order:-1;flex:0 0 26px;height:26px;border-radius:50%;color:#fff;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;background:var(--c)}
+.facewrap{display:flex;flex-direction:column;align-items:center;padding:14px 10px}
+.facewrap .sv{width:200px;height:auto}
+.facewrap b{font-size:14.5px;font-weight:700;margin-top:6px;text-align:center}
+.legend{display:flex;justify-content:center;gap:14px;font-size:12.5px;font-weight:600;color:var(--muted);margin-top:8px;flex-wrap:wrap}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+ul.tips{margin:0;padding:12px 16px 12px 34px;font-size:15px;line-height:1.5;font-weight:500;color:var(--body)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px;border-radius:16px;font-weight:700;font-size:16px}
+.btn.pri{background:var(--gr);color:#fff}
+.btn.mut{background:rgba(118,118,128,.16);color:var(--ink)}
+.btn:active{transform:scale(.98)}
+.mine{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:16px;background:var(--surf);font-weight:600;font-size:15px;margin:14px 0 10px;cursor:pointer;color:var(--acc)}
+.mine input{display:none}
+/* guided mode */
+.focus{position:fixed;inset:0;z-index:25;background:var(--bg);display:flex;flex-direction:column;transform:translateY(100%);transition:transform .38s cubic-bezier(.2,.85,.25,1), visibility 0s .38s;visibility:hidden}
+.focus.on{transform:none;visibility:visible;transition:transform .38s cubic-bezier(.2,.85,.25,1)}
+.fhd{padding:calc(12px + var(--safe-t)) 16px 8px;display:flex;align-items:center;gap:12px;max-width:560px;width:100%;margin:0 auto}
+.bars{display:flex;gap:4px}
+.bars i{flex:1;height:5px;border-radius:3px;background:rgba(118,118,128,.22);transition:background .3s}
+.bars i.d{background:var(--gr)} .bars i.c{background:var(--c)}
+.fcount{font-size:12.5px;font-weight:700;color:var(--muted);text-align:center;padding-top:6px}
+.fbody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:6px 16px 20px;max-width:560px;width:100%;margin:0 auto}
+.fft{padding:10px 16px calc(12px + var(--safe-b));display:flex;gap:10px;max-width:560px;width:100%;margin:0 auto;border-top:1px solid var(--line)}
+.fft .btn.mut{flex:0 0 100px}
+.fin{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:68vh;gap:10px}
+.fin .big{width:112px;height:112px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;animation:pop .55s cubic-bezier(.2,1.6,.4,1);box-shadow:0 12px 30px rgba(22,163,74,.35)}
+.fin h2{font-size:29px;font-weight:800;margin-top:12px}
+.fin p{font-size:16px;color:var(--body);margin:0 24px;font-weight:500;line-height:1.45}
+.fin .pillx{display:inline-flex;align-items:center;gap:6px;margin-top:10px;font-weight:800;font-size:15px;padding:9px 16px;border-radius:999px;background:var(--surf);box-shadow:var(--shadow)}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+/* history */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat{background:var(--surf);border-radius:20px;padding:14px 8px;text-align:center;box-shadow:var(--shadow)}
+.stat b{display:block;font-family:var(--disp);font-weight:800;font-size:28px;line-height:1.05}
+.stat span{font-size:12px;font-weight:600;color:var(--muted)}
+.badges{display:flex;gap:10px;overflow-x:auto;padding:2px 2px 6px;margin-bottom:10px;scrollbar-width:none}
+.badges::-webkit-scrollbar{display:none}
+.badge{flex:0 0 70px;text-align:center;font-size:11.5px;font-weight:600;color:var(--muted)}
+.badge .b{width:58px;height:58px;margin:0 auto 5px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--surf);box-shadow:var(--shadow)}
+.badge.got{color:var(--ink)} .badge.got .b{background:linear-gradient(145deg,var(--am1),var(--am2))}
+.calhead{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.calhead h3{font-size:17px;font-weight:700;margin:0}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dow{text-align:center;font-size:11px;font-weight:700;color:var(--muted);padding:4px 0}
+.day{aspect-ratio:1/1.1;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:600;font-size:14px;position:relative}
+.day.out{visibility:hidden}
+.day.fut{color:var(--muted);opacity:.5}
+.day.today{box-shadow:inset 0 0 0 2px var(--acc)}
+.day.both{background:var(--grt)}
+.dots{display:flex;gap:3px}
+.dots i{width:7px;height:7px;border-radius:50%;background:rgba(118,118,128,.25)}
+.dots i.a{background:var(--am2)} .dots i.p{background:var(--pm2)}
+.callegend{display:flex;gap:14px;justify-content:center;font-size:12px;font-weight:600;color:var(--muted);margin-top:10px}
+.callegend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+/* plan */
+.tl{background:var(--surf);border-radius:22px;box-shadow:var(--shadow);padding:6px 16px;margin-bottom:14px}
+.tlr{display:flex;gap:14px;position:relative;padding:12px 0}
+.tlr::before{content:"";position:absolute;left:21px;top:56px;bottom:-12px;width:2px;background:var(--line)}
+.tlr:last-child::before{display:none}
+.tlw{flex:0 0 44px;height:44px;border-radius:14px;background:var(--surf2);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--disp);font-weight:800;font-size:16px;line-height:1;color:var(--muted)}
+.tlw small{font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.tlr.past .tlw{background:var(--grt);color:var(--grd)}
+.tlr.cur .tlw{background:var(--pm2);color:#fff}
+.tlb b{font-weight:700;font-size:15.5px;display:block;padding-top:2px}
+.tlb span{font-size:14px;color:var(--body);font-weight:500;line-height:1.4}
+.youhere{font-size:10.5px;font-weight:800;color:#fff;background:var(--pm2);padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:2px;letter-spacing:.04em}
+.rl{margin:0;padding-left:20px;font-size:14.5px;line-height:1.6;font-weight:500;color:var(--body)}
+.exp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.exp div{background:var(--surf);border-radius:18px;padding:12px 14px;font-weight:500;font-size:14px;color:var(--body);box-shadow:var(--shadow);line-height:1.35}
+.exp b{display:block;font-family:var(--disp);font-weight:800;font-size:17px;color:var(--ink);margin-bottom:2px}
+.prow{display:flex;align-items:center;gap:12px;padding:10px 14px;position:relative}
+.prow + .prow::before{content:"";position:absolute;left:78px;right:0;top:0;height:1px;background:var(--line)}
+.prow .it b{font-size:15px}
+.prow a{font-weight:700;font-size:13.5px;color:var(--acc);background:var(--pmt);padding:7px 13px;border-radius:999px;text-decoration:none;flex:none}
+/* me */
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 16px;font-weight:500;font-size:16px;position:relative;width:100%;text-align:left}
+.row + .row::before{content:"";position:absolute;left:16px;right:0;top:0;height:1px;background:var(--line)}
+.row input{border:0;background:transparent;text-align:right;color:var(--muted);font-size:16px;font-weight:500;max-width:180px;color-scheme:light dark}
+.row input:focus{outline:none;color:var(--ink)}
+.sw{width:51px;height:31px;border-radius:999px;background:rgba(120,120,128,.3);position:relative;transition:background .2s;flex:0 0 51px}
+.sw::after{content:"";position:absolute;top:2px;left:2px;width:27px;height:27px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.2);transition:left .2s}
+.sw.on{background:var(--gr)} .sw.on::after{left:22px}
+.foot{font-size:13px;color:var(--muted);margin:-6px 16px 14px;line-height:1.45;font-weight:500}
+.linkrow{color:var(--acc);font-weight:600}
+.photos{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:14px 16px}
+.pp{text-align:center;font-size:11px;font-weight:600;color:var(--muted)}
+.pp label{display:flex;align-items:center;justify-content:center;aspect-ratio:3/4;border-radius:12px;background:var(--surf2);overflow:hidden;margin-bottom:4px;cursor:pointer}
+.pp img{width:100%;height:100%;object-fit:cover}
+.pp input{display:none}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:40}
+.toast{position:fixed;left:50%;bottom:calc(100px + var(--safe-b));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);font-weight:600;font-size:14px;padding:11px 18px;border-radius:999px;opacity:0;transition:all .25s;z-index:45;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.fade{animation:fade .25s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){ *{animation:none!important;transition:none!important} }
+</style>
+</head>
+<body>
+<div id="app"><div id="view"></div></div>
+<nav class="tabs" aria-label="Sections"><div class="in">
+  <button data-tab="today" class="on"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>Today</button>
+  <button data-tab="history"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>History</button>
+  <button data-tab="plan"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.3 6.8 19.1l1-5.8L3.5 9.2l5.9-.8z"/></svg>Plan</button>
+  <button data-tab="me"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Me</button>
+</div></nav>
+<div class="scrim" id="scrim"></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Product details"></section>
+<section class="focus" id="focus" role="dialog" aria-modal="true" aria-label="Guided routine"></section>
+<canvas id="confetti"></canvas>
+<div class="toast" id="toast"></div>
+<script>
+const DATA = {"steps": {"am": [{"id": "cleanse_am", "key": "cleanser", "verb": "Cleanse", "name": "Round Lab 1025 Dokdo Cleanser", "from_": 1, "amount": "Pea-sized", "does": "Clears overnight oil without stripping your skin the way the mud wash did.", "how": ["Turn the shower down to lukewarm and do your face last.", "Wet your face.", "Lather a pea-sized amount between wet palms.", "Massage for 30–60 seconds, giving the nose, chin and forehead the most time.", "Rinse well and pat dry. Don't rub."], "face": "cleanse", "facecap": "Small circles everywhere, 30–60 seconds", "tips": ["Hot water on your face makes the nose oilier later in the day.", "Retired: the Kanebo mud wash and bar soap."]}, {"id": "essence_am", "key": "lotion", "verb": "Hydrate", "name": "Kanebo On Skin Essence V", "from_": 1, "amount": "Coin-sized", "optional": true, "does": "Light, non-sticky hydration made for dryness plus surface shine. Gives the next layers something to grip.", "how": ["Pour a coin-sized amount into your palm.", "Rub your palms together once.", "Press your palms flat onto forehead, cheeks, nose and chin for a few seconds.", "No rubbing. Done in 20 seconds."], "face": "press", "facecap": "Press in all over", "tips": ["Hot, humid morning and your skin already feels fine? You can skip this one."]}, {"id": "serum", "key": "serum", "verb": "Brighten", "name": "Anua Niacinamide 10% + TXA 3% Serum", "from_": 3, "amount": "2–3 drops", "does": "Calms nose oil, fades dark spots and old ingrown-hair marks, and strengthens your skin.", "how": ["Put 2–3 drops on your fingertips.", "Press over your whole face, starting with the cheek spots and forehead.", "Keep it off your eyelids.", "Wait 1 minute before the next step."], "face": "serum", "facecap": "Whole face, extra on spots", "tips": ["More drops won't work faster, and too much can pill under sunscreen."]}, {"id": "azelaic", "key": "azelaic", "verb": "Treat", "name": "Ego Azclear Action Lotion 20%", "from_": 7, "sched": "azelaic", "amount": "1 pea, whole face", "does": "Fades ingrown-hair marks, unclogs pores and calms the nose-crease and upper-lip bumps.", "how": ["Squeeze one pea-sized amount.", "Dot it on forehead, nose, both cheeks and chin.", "Spread thinly, including the nose creases, upper lip, jaw and beard line.", "Keep it off your lips and eyelids.", "Wait 1–2 minutes before moisturiser."], "face": "azelaic", "facecap": "Dot, then spread. Include nose creases and jaw", "tips": ["Tingling for the first 2 weeks is normal.", "Still stinging after that? Use it every second morning."]}, {"id": "cream_am", "key": "cream", "verb": "Moisturise", "name": "Torriden Dive-In Soothing Cream", "from_": 1, "amount": "Thin layer", "does": "Water-gel moisture that never feels greasy.", "how": ["Take about half a pea per cheek.", "Smooth over your cheeks and jaw.", "Skip the nose if it's already oily.", "Wait 1 minute before sunscreen."], "face": "cheeks", "facecap": "Mainly cheeks and jaw", "tips": []}, {"id": "spf", "key": "spf", "verb": "Protect", "name": "La Roche-Posay UVMune 400 SPF50+", "from_": 1, "amount": "Two finger-lengths", "star": true, "does": "Blocks the daily Brisbane UV behind your spots and uneven tone. The most important step of all.", "how": ["Shake the bottle.", "Squeeze a line along two fingers, tip to base.", "Dot over forehead, cheeks, nose and chin, then spread evenly.", "Add extra for your ears and the back of your neck.", "Put it on 10 minutes before you walk to the bus."], "face": "spf", "facecap": "Face, ears and neck", "tips": ["Keep it next to your toothbrush so you never forget.", "Weekend outdoors or a long drive? Reapply every 2 hours. Car windows let UVA through."]}], "pm": [{"id": "oil", "key": "oil", "verb": "Oil cleanse", "name": "Anua Heartleaf Pore Control Cleansing Oil Mild", "from_": 1, "amount": "2 pumps", "does": "Dissolves sunscreen and the oily plugs in your nose pores. It turns milky and rinses off completely.", "how": ["Dry hands, dry face.", "Pump twice into your palm.", "Massage over your whole face for 60 seconds.", "Then 60 seconds of small circles on your nose and inner cheeks.", "Wet your fingers and keep massaging until it turns milky.", "Rinse with lukewarm water."], "face": "oil", "facecap": "60 seconds all over, then 60 on the nose", "tips": ["Keep it out of the nose creases while they're flaring."]}, {"id": "cleanse_pm", "key": "cleanser", "verb": "Cleanse", "name": "Round Lab 1025 Dokdo Cleanser", "from_": 1, "amount": "Pea-sized", "does": "Clears the oil residue so your treatments can get in.", "how": ["Lather a pea-sized amount with lukewarm water.", "Massage for 30 seconds.", "Rinse and pat dry."], "face": "cleanse", "facecap": "Small circles, 30 seconds", "tips": []}, {"id": "shave", "key": "shave", "verb": "Shave", "name": "Your foil shaver", "from_": 1, "shave": true, "amount": "Neck: 0.5–1 mm guard", "does": "Shaving at night on clean, dry skin means less irritation and fewer ingrown hairs, and fewer dark marks.", "how": ["Face clean and completely dry.", "Neck: use the trimmer with a 0.5–1 mm guard. Don't shave it close.", "Cheeks and jaw: foil shaver, light pressure, 1–2 passes.", "On the neck, go the direction the hair grows. Don't stretch the skin.", "No alcohol aftershave. Carry on with the essence."], "face": "shave", "facecap": "Trim the neck, shave cheeks and jaw", "tips": ["Brush the head out after each shave and clean it weekly.", "Never dig out ingrown hairs. A warm compress for 2 minutes helps them surface."]}, {"id": "essence_pm", "key": "lotion", "verb": "Hydrate", "name": "Kanebo On Skin Essence V", "from_": 1, "amount": "Coin-sized", "does": "The Japanese layering method: moisture where you need it, without heaviness.", "how": ["Press one layer in all over.", "Dry cheeks? Press a second layer on the cheeks only.", "Retinal night? Wait 5 minutes before the next step."], "face": "press", "facecap": "One layer, second on dry cheeks", "tips": []}, {"id": "bha", "key": "bha", "verb": "BHA night", "name": "Anua BHA 2% Gentle Exfoliating Toner", "from_": 5, "sched": "bha", "amount": "1 cotton pad", "does": "Clears blackheads inside your pores and stops ingrown hairs forming on your jaw and neck.", "how": ["Soak a cotton pad.", "Swipe over your nose, chin and inner cheeks.", "Then your jaw and neck (your shave zone).", "Don't rinse.", "Wait a minute, then moisturiser."], "face": "bha", "facecap": "Nose, inner cheeks, chin, jaw and neck", "tips": ["Never on a retinal night.", "Nose crease flaring? Skip that area tonight."]}, {"id": "retinal", "key": "retinal", "verb": "Retinal night", "name": "Purito Retinol Retinal 2000 NAD+ Serum", "from_": 9, "sched": "retinal", "amount": "1 pea, whole face", "star": true, "does": "Your star treatment: smoother texture, smaller-looking pores, faded spots and collagen support.", "how": ["Your skin must be dry. Wait 5 minutes after the essence.", "Take one pea-sized amount for your whole face.", "Make 5 dots: forehead, nose, both cheeks and chin.", "Spread each dot outwards into a thin layer.", "Keep clear of your eyes, nostril edges and mouth corners.", "Wash your hands."], "face": "retinal", "facecap": "5 dots, then spread. Red circles: keep away", "tips": ["Dry or flaky? Moisturiser before AND after it (the sandwich).", "Still irritated? Drop back to 2 nights a week.", "Sunscreen every morning is non-negotiable on retinal."]}, {"id": "eye", "key": "eye", "verb": "Eye care", "name": "Beauty of Joseon Revive Eye Serum", "from_": 13, "sched": "eye", "amount": "1 pump, both eyes", "does": "A gentle retinal for under-eye darkness and fine texture.", "how": ["One pump onto a ring finger.", "Share it between both ring fingers.", "Tap lightly along the bone under each eye.", "Never on the lid or lash line."], "face": "eye", "facecap": "Tap along the eye-socket bone", "tips": []}, {"id": "cream_pm", "key": "cream", "verb": "Moisturise", "name": "Torriden Dive-In Soothing Cream", "from_": 1, "amount": "A little more than morning", "does": "Locks in hydration and softens any retinal dryness.", "how": ["Take a pea-sized amount.", "Smooth over your face and neck.", "Dry patches? Add a little more there."], "face": "cream", "facecap": "Face and neck", "tips": []}, {"id": "lip", "key": "lip", "verb": "Lips", "name": "Your lip balm", "from_": 1, "amount": "Thin layer", "nophoto": true, "does": "Fixes the dry, flaking lips that showed up in your daylight photos.", "how": ["Last thing before bed.", "A thin layer over both lips."], "face": "lip", "facecap": "Lips only", "tips": []}]}, "illo": {"cleanser": "<svg viewBox=\"0 0 64 110\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"20\" y=\"2\" width=\"24\" height=\"6\" rx=\"1.5\" fill=\"#DCEBF2\" stroke=\"#00000022\" stroke-width=\"1\"/><path d=\"M14 8h36l-5 74H19z\" fill=\"#DCEBF2\" stroke=\"#00000022\" stroke-width=\"1\"/><rect x=\"21\" y=\"82\" width=\"22\" height=\"24\" rx=\"4\" fill=\"#4F87A6\"/><rect x=\"16\" y=\"34\" width=\"32\" height=\"24\" rx=\"3.5\" fill=\"#fff\" opacity=\"0.94\"/><text x=\"32.0\" y=\"44.5\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">Round</text><text x=\"32.0\" y=\"52.8\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">Lab</text><path d=\"M20 14V30\" stroke=\"#fff\" stroke-opacity=\".45\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>", "oil": "<svg viewBox=\"0 0 64 110\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"20\" y=\"6\" width=\"28\" height=\"7\" rx=\"3\" fill=\"#4E7A4A\"/><rect x=\"46\" y=\"7\" width=\"10\" height=\"4\" rx=\"2\" fill=\"#4E7A4A\"/><rect x=\"29\" y=\"13\" width=\"6\" height=\"16\" fill=\"#4E7A4A\"/><rect x=\"21\" y=\"28\" width=\"22\" height=\"10\" rx=\"2\" fill=\"#4E7A4A\"/><rect x=\"10\" y=\"38\" width=\"44\" height=\"68\" rx=\"11\" fill=\"#F3E2A9\" stroke=\"#00000022\" stroke-width=\"1\"/><rect x=\"14\" y=\"60\" width=\"36\" height=\"26\" rx=\"3.5\" fill=\"#fff\" opacity=\"0.94\"/><text x=\"32.0\" y=\"71.5\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">Anua</text><text x=\"32.0\" y=\"79.8\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">Oil</text><path d=\"M16 46V58\" stroke=\"#fff\" stroke-opacity=\".45\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>", "lotion": "<svg viewBox=\"0 0 64 110\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"19\" y=\"10\" width=\"26\" height=\"20\" rx=\"4\" fill=\"#7A5C8E\"/><rect x=\"12\" y=\"30\" width=\"40\" height=\"76\" rx=\"10\" fill=\"#F4EEF6\" stroke=\"#00000022\" stroke-width=\"1\"/><rect x=\"15\" y=\"56\" width=\"34\" height=\"26\" rx=\"3.5\" fill=\"#fff\" opacity=\"0.94\"/><text x=\"32.0\" y=\"67.5\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">Kanebo</text><text x=\"32.0\" y=\"75.8\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">Essence</text><path d=\"M17 38V54\" stroke=\"#fff\" stroke-opacity=\".45\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>", "serum": "<svg viewBox=\"0 0 64 110\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><ellipse cx=\"32\" cy=\"16\" rx=\"8\" ry=\"12\" fill=\"#2D3A4E\"/><rect x=\"23\" y=\"26\" width=\"18\" height=\"12\" rx=\"2\" fill=\"#2D3A4E\"/><rect x=\"12\" y=\"38\" width=\"40\" height=\"68\" rx=\"9\" fill=\"#E7EEF3\" stroke=\"#00000022\" stroke-width=\"1\"/><rect x=\"15\" y=\"60\" width=\"34\" height=\"26\" rx=\"3.5\" fill=\"#fff\" opacity=\"0.94\"/><text x=\"32.0\" y=\"71.5\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">Anua</text><text x=\"32.0\" y=\"79.8\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">Niacin.</text><path d=\"M17 46V58\" stroke=\"#fff\" stroke-opacity=\".45\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>", "azelaic": "<svg viewBox=\"0 0 64 110\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"20\" y=\"2\" width=\"24\" height=\"6\" rx=\"1.5\" fill=\"#F6F1E8\" stroke=\"#00000022\" stroke-width=\"1\"/><path d=\"M14 8h36l-5 74H19z\" fill=\"#F6F1E8\" stroke=\"#00000022\" stroke-width=\"1\"/><rect x=\"21\" y=\"82\" width=\"22\" height=\"24\" rx=\"4\" fill=\"#2E8B7A\"/><rect x=\"16\" y=\"34\" width=\"32\" height=\"24\" rx=\"3.5\" fill=\"#fff\" opacity=\"0.94\"/><text x=\"32.0\" y=\"44.5\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">Azclear</text><text x=\"32.0\" y=\"52.8\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">20%</text><path d=\"M20 14V30\" stroke=\"#fff\" stroke-opacity=\".45\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>", "cream": "<svg viewBox=\"0 0 64 110\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"5\" y=\"48\" width=\"54\" height=\"16\" rx=\"6\" fill=\"#F4F7FA\"/><rect x=\"7\" y=\"62\" width=\"50\" height=\"44\" rx=\"10\" fill=\"#CFE6F0\" stroke=\"#00000022\" stroke-width=\"1\"/><rect x=\"12\" y=\"72\" width=\"40\" height=\"24\" rx=\"3.5\" fill=\"#fff\" opacity=\"0.94\"/><text x=\"32.0\" y=\"86.6\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">Torriden</text><path d=\"M12 68V100\" stroke=\"#fff\" stroke-opacity=\".45\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>", "spf": "<svg viewBox=\"0 0 64 110\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"20\" y=\"2\" width=\"24\" height=\"6\" rx=\"1.5\" fill=\"#F7F7F5\" stroke=\"#00000022\" stroke-width=\"1\"/><path d=\"M14 8h36l-5 74H19z\" fill=\"#F7F7F5\" stroke=\"#00000022\" stroke-width=\"1\"/><rect x=\"21\" y=\"82\" width=\"22\" height=\"24\" rx=\"4\" fill=\"#E0832F\"/><rect x=\"16\" y=\"34\" width=\"32\" height=\"24\" rx=\"3.5\" fill=\"#fff\" opacity=\"0.94\"/><text x=\"32.0\" y=\"44.5\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">UVMune</text><text x=\"32.0\" y=\"52.8\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">400</text><path d=\"M20 14V30\" stroke=\"#fff\" stroke-opacity=\".45\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>", "retinal": "<svg viewBox=\"0 0 64 110\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><ellipse cx=\"32\" cy=\"16\" rx=\"8\" ry=\"12\" fill=\"#5B4A8B\"/><rect x=\"23\" y=\"26\" width=\"18\" height=\"12\" rx=\"2\" fill=\"#5B4A8B\"/><rect x=\"12\" y=\"38\" width=\"40\" height=\"68\" rx=\"9\" fill=\"#EFE9F6\" stroke=\"#00000022\" stroke-width=\"1\"/><rect x=\"15\" y=\"60\" width=\"34\" height=\"26\" rx=\"3.5\" fill=\"#fff\" opacity=\"0.94\"/><text x=\"32.0\" y=\"71.5\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">Purito</text><text x=\"32.0\" y=\"79.8\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">Retinal</text><path d=\"M17 46V58\" stroke=\"#fff\" stroke-opacity=\".45\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>", "bha": "<svg viewBox=\"0 0 64 110\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"19\" y=\"10\" width=\"26\" height=\"20\" rx=\"4\" fill=\"#C8463D\"/><rect x=\"12\" y=\"30\" width=\"40\" height=\"76\" rx=\"10\" fill=\"#F1F6EE\" stroke=\"#00000022\" stroke-width=\"1\"/><rect x=\"15\" y=\"56\" width=\"34\" height=\"26\" rx=\"3.5\" fill=\"#fff\" opacity=\"0.94\"/><text x=\"32.0\" y=\"67.5\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">Anua</text><text x=\"32.0\" y=\"75.8\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7.5\" text-anchor=\"middle\" fill=\"#1E2638\">BHA</text><path d=\"M17 38V54\" stroke=\"#fff\" stroke-opacity=\".45\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>", "eye": "<svg viewBox=\"0 0 64 110\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"22\" y=\"4\" width=\"20\" height=\"14\" rx=\"4\" fill=\"#9C7A3C\"/><rect x=\"16\" y=\"18\" width=\"32\" height=\"88\" rx=\"8\" fill=\"#E9DCC5\" stroke=\"#00000022\" stroke-width=\"1\"/><rect x=\"18\" y=\"50\" width=\"28\" height=\"28\" rx=\"3.5\" fill=\"#fff\" opacity=\"0.94\"/><text x=\"32.0\" y=\"62.6\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7\" text-anchor=\"middle\" fill=\"#1E2638\">BoJ</text><text x=\"32.0\" y=\"70.3\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7\" text-anchor=\"middle\" fill=\"#1E2638\">Eye</text><path d=\"M21 24V46\" stroke=\"#fff\" stroke-opacity=\".45\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>", "lip": "<svg viewBox=\"0 0 64 110\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"12\" y=\"64\" width=\"40\" height=\"13\" rx=\"5\" fill=\"#D97A8C\"/><rect x=\"14\" y=\"75\" width=\"36\" height=\"31\" rx=\"8\" fill=\"#F2C3CC\" stroke=\"#00000022\" stroke-width=\"1\"/><rect x=\"17\" y=\"80\" width=\"30\" height=\"20\" rx=\"3.5\" fill=\"#fff\" opacity=\"0.94\"/><text x=\"32.0\" y=\"88.6\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7\" text-anchor=\"middle\" fill=\"#1E2638\">Lip</text><text x=\"32.0\" y=\"96.3\" font-family=\"Poppins\" font-weight=\"700\" font-size=\"7\" text-anchor=\"middle\" fill=\"#1E2638\">Balm</text></svg>", "shave": "<svg viewBox=\"0 0 64 110\" class=\"sv\" aria-hidden=\"true\"><rect x=\"16\" y=\"6\" width=\"32\" height=\"22\" rx=\"6\" fill=\"#3B4252\"/><rect x=\"19\" y=\"9\" width=\"26\" height=\"6\" rx=\"2\" fill=\"#C9CED8\"/><rect x=\"19\" y=\"18\" width=\"26\" height=\"6\" rx=\"2\" fill=\"#C9CED8\"/><rect x=\"20\" y=\"28\" width=\"24\" height=\"76\" rx=\"11\" fill=\"#5B6475\"/><circle cx=\"32\" cy=\"52\" r=\"5\" fill=\"#E0832F\"/><path d=\"M25 70v26\" stroke=\"#fff\" stroke-opacity=\".35\" stroke-width=\"3\" stroke-linecap=\"round\"/></svg>"}, "photo": {"cleanser": "https://wcosmetics.com.au/cdn/shop/files/WXWorkCapture_16859804972666_86e79443-12d5-46cb-b34b-d939629cbbe6.png?v=1756447165&width=400", "oil": "https://wcosmetics.com.au/cdn/shop/files/f2f8ed93-bcae-4681-b265-656b622660db.png?v=1777342077&width=400", "cream": "https://wcosmetics.com.au/cdn/shop/files/Torriden_Dive_in_Soothing_Cream_100mL_KBeauty_Australia__48380.jpg?v=1756447342&width=400", "serum": "https://wcosmetics.com.au/cdn/shop/files/JIETU1779782749510.png?v=1779782757&width=400", "bha": "https://wcosmetics.com.au/cdn/shop/files/WXWorkCapture_1719490110121.png?v=1756444869&width=400", "retinal": "https://wcosmetics.com.au/cdn/shop/files/JIETU1782891564643.png?v=1782891592&width=400", "eye": "https://wcosmetics.com.au/cdn/shop/products/9fcb6d4e-50ec-402d-ab42-185e1c00353d.jpg?v=1756449663&width=400", "lotion": "https://tokyobeautybox.com/cdn/shop/files/Kanebo_On_Skin_Essence_V_100ml_1200x1200.jpg?v=1772890978&width=400"}, "face": {"cleanse": "<svg viewBox=\"0 0 200 240\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"76\" y=\"168\" width=\"48\" height=\"72\" fill=\"#8E5F42\"/><ellipse cx=\"38\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><ellipse cx=\"162\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><path d=\"M40 100C40 58 66 34 100 34s60 24 60 66c0 50-24 92-60 92s-60-42-60-92z\" fill=\"#B07A55\"/><path d=\"M52 140c6 30 24 52 48 52s42-22 48-52c-8 8-20 12-30 12-6-8-12-10-18-10s-12 2-18 10c-10 0-22-4-30-12z\" fill=\"#2A1E1A\" opacity=\".16\"/><path d=\"M38 96c-4-40 22-72 62-72s68 30 62 72c-6-18-14-30-26-36-14 6-46 8-68 2-14 8-24 18-30 34z\" fill=\"#1F1A1A\"/><path d=\"M44 92c2-10 6-18 12-24\" stroke=\"#6b6b6b\" stroke-width=\"3\" fill=\"none\" opacity=\".6\"/><path d=\"M62 86q14-8 28-2M110 84q14-6 28 2\" stroke=\"#1F1A1A\" stroke-width=\"5\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"76\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"76\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><ellipse cx=\"124\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"124\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><path d=\"M100 100c-2 14-6 26-10 36 4 6 16 6 20 0-4-10-8-22-10-36\" fill=\"none\" stroke=\"#8E5F42\" stroke-width=\"2.4\" stroke-linejoin=\"round\"/><path d=\"M84 162q16 7 32 0\" stroke=\"#7A4637\" stroke-width=\"3.2\" stroke-linecap=\"round\" fill=\"none\"/><circle cx=\"100\" cy=\"78\" r=\"12\" fill=\"none\" stroke=\"#E0832F\" stroke-width=\"2.6\" stroke-dasharray=\"6 4\"/><path d=\"M108 72l4 6 5-5\" stroke=\"#E0832F\" stroke-width=\"2.6\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"70\" cy=\"130\" r=\"13\" fill=\"none\" stroke=\"#E0832F\" stroke-width=\"2.6\" stroke-dasharray=\"6 4\"/><path d=\"M79 124l4 6 5-5\" stroke=\"#E0832F\" stroke-width=\"2.6\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"130\" cy=\"130\" r=\"13\" fill=\"none\" stroke=\"#E0832F\" stroke-width=\"2.6\" stroke-dasharray=\"6 4\"/><path d=\"M139 124l4 6 5-5\" stroke=\"#E0832F\" stroke-width=\"2.6\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"100\" cy=\"122\" r=\"9\" fill=\"none\" stroke=\"#E0832F\" stroke-width=\"2.6\" stroke-dasharray=\"6 4\"/><path d=\"M105 116l4 6 5-5\" stroke=\"#E0832F\" stroke-width=\"2.6\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"100\" cy=\"180\" r=\"10\" fill=\"none\" stroke=\"#E0832F\" stroke-width=\"2.6\" stroke-dasharray=\"6 4\"/><path d=\"M106 174l4 6 5-5\" stroke=\"#E0832F\" stroke-width=\"2.6\" fill=\"none\" stroke-linecap=\"round\"/></svg>", "oil": "<svg viewBox=\"0 0 200 240\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"76\" y=\"168\" width=\"48\" height=\"72\" fill=\"#8E5F42\"/><ellipse cx=\"38\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><ellipse cx=\"162\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><path d=\"M40 100C40 58 66 34 100 34s60 24 60 66c0 50-24 92-60 92s-60-42-60-92z\" fill=\"#B07A55\"/><path d=\"M52 140c6 30 24 52 48 52s42-22 48-52c-8 8-20 12-30 12-6-8-12-10-18-10s-12 2-18 10c-10 0-22-4-30-12z\" fill=\"#2A1E1A\" opacity=\".16\"/><path d=\"M38 96c-4-40 22-72 62-72s68 30 62 72c-6-18-14-30-26-36-14 6-46 8-68 2-14 8-24 18-30 34z\" fill=\"#1F1A1A\"/><path d=\"M44 92c2-10 6-18 12-24\" stroke=\"#6b6b6b\" stroke-width=\"3\" fill=\"none\" opacity=\".6\"/><path d=\"M62 86q14-8 28-2M110 84q14-6 28 2\" stroke=\"#1F1A1A\" stroke-width=\"5\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"76\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"76\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><ellipse cx=\"124\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"124\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><path d=\"M100 100c-2 14-6 26-10 36 4 6 16 6 20 0-4-10-8-22-10-36\" fill=\"none\" stroke=\"#8E5F42\" stroke-width=\"2.4\" stroke-linejoin=\"round\"/><path d=\"M84 162q16 7 32 0\" stroke=\"#7A4637\" stroke-width=\"3.2\" stroke-linecap=\"round\" fill=\"none\"/><circle cx=\"100\" cy=\"124\" r=\"22\" fill=\"none\" stroke=\"#3C5BA9\" stroke-width=\"2.6\" stroke-dasharray=\"6 4\"/><path d=\"M118 118l4 6 5-5\" stroke=\"#3C5BA9\" stroke-width=\"2.6\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"74\" cy=\"128\" r=\"12\" fill=\"none\" stroke=\"#3C5BA9\" stroke-width=\"2.6\" stroke-dasharray=\"6 4\"/><path d=\"M82 122l4 6 5-5\" stroke=\"#3C5BA9\" stroke-width=\"2.6\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"126\" cy=\"128\" r=\"12\" fill=\"none\" stroke=\"#3C5BA9\" stroke-width=\"2.6\" stroke-dasharray=\"6 4\"/><path d=\"M134 122l4 6 5-5\" stroke=\"#3C5BA9\" stroke-width=\"2.6\" fill=\"none\" stroke-linecap=\"round\"/></svg>", "press": "<svg viewBox=\"0 0 200 240\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"76\" y=\"168\" width=\"48\" height=\"72\" fill=\"#8E5F42\"/><ellipse cx=\"38\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><ellipse cx=\"162\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><path d=\"M40 100C40 58 66 34 100 34s60 24 60 66c0 50-24 92-60 92s-60-42-60-92z\" fill=\"#B07A55\"/><path d=\"M52 140c6 30 24 52 48 52s42-22 48-52c-8 8-20 12-30 12-6-8-12-10-18-10s-12 2-18 10c-10 0-22-4-30-12z\" fill=\"#2A1E1A\" opacity=\".16\"/><path d=\"M38 96c-4-40 22-72 62-72s68 30 62 72c-6-18-14-30-26-36-14 6-46 8-68 2-14 8-24 18-30 34z\" fill=\"#1F1A1A\"/><path d=\"M44 92c2-10 6-18 12-24\" stroke=\"#6b6b6b\" stroke-width=\"3\" fill=\"none\" opacity=\".6\"/><path d=\"M62 86q14-8 28-2M110 84q14-6 28 2\" stroke=\"#1F1A1A\" stroke-width=\"5\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"76\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"76\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><ellipse cx=\"124\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"124\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><path d=\"M100 100c-2 14-6 26-10 36 4 6 16 6 20 0-4-10-8-22-10-36\" fill=\"none\" stroke=\"#8E5F42\" stroke-width=\"2.4\" stroke-linejoin=\"round\"/><path d=\"M84 162q16 7 32 0\" stroke=\"#7A4637\" stroke-width=\"3.2\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"100\" cy=\"124\" rx=\"56\" ry=\"66\" fill=\"#2E8B7A\" opacity=\"0.32\"/><circle cx=\"76\" cy=\"100\" r=\"13\" fill=\"none\" stroke=\"#C8463D\" stroke-width=\"2.4\" stroke-dasharray=\"3 2.2\"/><circle cx=\"124\" cy=\"100\" r=\"13\" fill=\"none\" stroke=\"#C8463D\" stroke-width=\"2.4\" stroke-dasharray=\"3 2.2\"/></svg>", "serum": "<svg viewBox=\"0 0 200 240\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"76\" y=\"168\" width=\"48\" height=\"72\" fill=\"#8E5F42\"/><ellipse cx=\"38\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><ellipse cx=\"162\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><path d=\"M40 100C40 58 66 34 100 34s60 24 60 66c0 50-24 92-60 92s-60-42-60-92z\" fill=\"#B07A55\"/><path d=\"M52 140c6 30 24 52 48 52s42-22 48-52c-8 8-20 12-30 12-6-8-12-10-18-10s-12 2-18 10c-10 0-22-4-30-12z\" fill=\"#2A1E1A\" opacity=\".16\"/><path d=\"M38 96c-4-40 22-72 62-72s68 30 62 72c-6-18-14-30-26-36-14 6-46 8-68 2-14 8-24 18-30 34z\" fill=\"#1F1A1A\"/><path d=\"M44 92c2-10 6-18 12-24\" stroke=\"#6b6b6b\" stroke-width=\"3\" fill=\"none\" opacity=\".6\"/><path d=\"M62 86q14-8 28-2M110 84q14-6 28 2\" stroke=\"#1F1A1A\" stroke-width=\"5\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"76\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"76\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><ellipse cx=\"124\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"124\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><path d=\"M100 100c-2 14-6 26-10 36 4 6 16 6 20 0-4-10-8-22-10-36\" fill=\"none\" stroke=\"#8E5F42\" stroke-width=\"2.4\" stroke-linejoin=\"round\"/><path d=\"M84 162q16 7 32 0\" stroke=\"#7A4637\" stroke-width=\"3.2\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"100\" cy=\"124\" rx=\"56\" ry=\"66\" fill=\"#2E8B7A\" opacity=\"0.38\"/><ellipse cx=\"68\" cy=\"128\" rx=\"14\" ry=\"12\" fill=\"#2E8B7A\" opacity=\"0.5\"/><ellipse cx=\"100\" cy=\"74\" rx=\"30\" ry=\"8\" fill=\"#2E8B7A\" opacity=\"0.45\"/><circle cx=\"76\" cy=\"100\" r=\"13\" fill=\"none\" stroke=\"#C8463D\" stroke-width=\"2.4\" stroke-dasharray=\"3 2.2\"/><circle cx=\"124\" cy=\"100\" r=\"13\" fill=\"none\" stroke=\"#C8463D\" stroke-width=\"2.4\" stroke-dasharray=\"3 2.2\"/></svg>", "azelaic": "<svg viewBox=\"0 0 200 240\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"76\" y=\"168\" width=\"48\" height=\"72\" fill=\"#8E5F42\"/><ellipse cx=\"38\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><ellipse cx=\"162\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><path d=\"M40 100C40 58 66 34 100 34s60 24 60 66c0 50-24 92-60 92s-60-42-60-92z\" fill=\"#B07A55\"/><path d=\"M52 140c6 30 24 52 48 52s42-22 48-52c-8 8-20 12-30 12-6-8-12-10-18-10s-12 2-18 10c-10 0-22-4-30-12z\" fill=\"#2A1E1A\" opacity=\".16\"/><path d=\"M38 96c-4-40 22-72 62-72s68 30 62 72c-6-18-14-30-26-36-14 6-46 8-68 2-14 8-24 18-30 34z\" fill=\"#1F1A1A\"/><path d=\"M44 92c2-10 6-18 12-24\" stroke=\"#6b6b6b\" stroke-width=\"3\" fill=\"none\" opacity=\".6\"/><path d=\"M62 86q14-8 28-2M110 84q14-6 28 2\" stroke=\"#1F1A1A\" stroke-width=\"5\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"76\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"76\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><ellipse cx=\"124\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"124\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><path d=\"M100 100c-2 14-6 26-10 36 4 6 16 6 20 0-4-10-8-22-10-36\" fill=\"none\" stroke=\"#8E5F42\" stroke-width=\"2.4\" stroke-linejoin=\"round\"/><path d=\"M84 162q16 7 32 0\" stroke=\"#7A4637\" stroke-width=\"3.2\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"100\" cy=\"74\" rx=\"34\" ry=\"9\" fill=\"#2E8B7A\" opacity=\"0.4\"/><ellipse cx=\"70\" cy=\"128\" rx=\"22\" ry=\"20\" fill=\"#2E8B7A\" opacity=\"0.35\"/><ellipse cx=\"130\" cy=\"128\" rx=\"22\" ry=\"20\" fill=\"#2E8B7A\" opacity=\"0.35\"/><ellipse cx=\"100\" cy=\"152\" rx=\"22\" ry=\"7\" fill=\"#2E8B7A\" opacity=\"0.6\"/><ellipse cx=\"86\" cy=\"140\" rx=\"6\" ry=\"9\" fill=\"#2E8B7A\" opacity=\"0.7\"/><ellipse cx=\"114\" cy=\"140\" rx=\"6\" ry=\"9\" fill=\"#2E8B7A\" opacity=\"0.7\"/><ellipse cx=\"100\" cy=\"180\" rx=\"24\" ry=\"10\" fill=\"#2E8B7A\" opacity=\"0.4\"/><path d=\"M54 148c8 26 26 42 46 42s38-16 46-42\" stroke=\"#2E8B7A\" stroke-width=\"9\" fill=\"none\" opacity=\".45\"/><circle cx=\"76\" cy=\"100\" r=\"13\" fill=\"none\" stroke=\"#C8463D\" stroke-width=\"2.4\" stroke-dasharray=\"3 2.2\"/><circle cx=\"124\" cy=\"100\" r=\"13\" fill=\"none\" stroke=\"#C8463D\" stroke-width=\"2.4\" stroke-dasharray=\"3 2.2\"/></svg>", "cheeks": "<svg viewBox=\"0 0 200 240\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"76\" y=\"168\" width=\"48\" height=\"72\" fill=\"#8E5F42\"/><ellipse cx=\"38\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><ellipse cx=\"162\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><path d=\"M40 100C40 58 66 34 100 34s60 24 60 66c0 50-24 92-60 92s-60-42-60-92z\" fill=\"#B07A55\"/><path d=\"M52 140c6 30 24 52 48 52s42-22 48-52c-8 8-20 12-30 12-6-8-12-10-18-10s-12 2-18 10c-10 0-22-4-30-12z\" fill=\"#2A1E1A\" opacity=\".16\"/><path d=\"M38 96c-4-40 22-72 62-72s68 30 62 72c-6-18-14-30-26-36-14 6-46 8-68 2-14 8-24 18-30 34z\" fill=\"#1F1A1A\"/><path d=\"M44 92c2-10 6-18 12-24\" stroke=\"#6b6b6b\" stroke-width=\"3\" fill=\"none\" opacity=\".6\"/><path d=\"M62 86q14-8 28-2M110 84q14-6 28 2\" stroke=\"#1F1A1A\" stroke-width=\"5\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"76\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"76\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><ellipse cx=\"124\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"124\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><path d=\"M100 100c-2 14-6 26-10 36 4 6 16 6 20 0-4-10-8-22-10-36\" fill=\"none\" stroke=\"#8E5F42\" stroke-width=\"2.4\" stroke-linejoin=\"round\"/><path d=\"M84 162q16 7 32 0\" stroke=\"#7A4637\" stroke-width=\"3.2\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"68\" cy=\"132\" rx=\"22\" ry=\"22\" fill=\"#2E8B7A\" opacity=\"0.45\"/><ellipse cx=\"132\" cy=\"132\" rx=\"22\" ry=\"22\" fill=\"#2E8B7A\" opacity=\"0.45\"/><path d=\"M54 148c8 26 26 42 46 42s38-16 46-42\" stroke=\"#2E8B7A\" stroke-width=\"9\" fill=\"none\" opacity=\".45\"/></svg>", "bha": "<svg viewBox=\"0 0 200 240\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"76\" y=\"168\" width=\"48\" height=\"72\" fill=\"#8E5F42\"/><ellipse cx=\"38\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><ellipse cx=\"162\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><path d=\"M40 100C40 58 66 34 100 34s60 24 60 66c0 50-24 92-60 92s-60-42-60-92z\" fill=\"#B07A55\"/><path d=\"M52 140c6 30 24 52 48 52s42-22 48-52c-8 8-20 12-30 12-6-8-12-10-18-10s-12 2-18 10c-10 0-22-4-30-12z\" fill=\"#2A1E1A\" opacity=\".16\"/><path d=\"M38 96c-4-40 22-72 62-72s68 30 62 72c-6-18-14-30-26-36-14 6-46 8-68 2-14 8-24 18-30 34z\" fill=\"#1F1A1A\"/><path d=\"M44 92c2-10 6-18 12-24\" stroke=\"#6b6b6b\" stroke-width=\"3\" fill=\"none\" opacity=\".6\"/><path d=\"M62 86q14-8 28-2M110 84q14-6 28 2\" stroke=\"#1F1A1A\" stroke-width=\"5\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"76\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"76\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><ellipse cx=\"124\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"124\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><path d=\"M100 100c-2 14-6 26-10 36 4 6 16 6 20 0-4-10-8-22-10-36\" fill=\"none\" stroke=\"#8E5F42\" stroke-width=\"2.4\" stroke-linejoin=\"round\"/><path d=\"M84 162q16 7 32 0\" stroke=\"#7A4637\" stroke-width=\"3.2\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"100\" cy=\"122\" rx=\"14\" ry=\"26\" fill=\"#C8463D\" opacity=\"0.5\"/><ellipse cx=\"80\" cy=\"132\" rx=\"10\" ry=\"12\" fill=\"#C8463D\" opacity=\"0.45\"/><ellipse cx=\"120\" cy=\"132\" rx=\"10\" ry=\"12\" fill=\"#C8463D\" opacity=\"0.45\"/><ellipse cx=\"100\" cy=\"180\" rx=\"22\" ry=\"10\" fill=\"#C8463D\" opacity=\"0.45\"/><path d=\"M54 148c8 26 26 42 46 42s38-16 46-42\" stroke=\"#C8463D\" stroke-width=\"9\" fill=\"none\" opacity=\".45\"/><rect x=\"80\" y=\"198\" width=\"40\" height=\"38\" rx=\"8\" fill=\"#C8463D\" opacity=\".4\"/></svg>", "retinal": "<svg viewBox=\"0 0 200 240\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"76\" y=\"168\" width=\"48\" height=\"72\" fill=\"#8E5F42\"/><ellipse cx=\"38\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><ellipse cx=\"162\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><path d=\"M40 100C40 58 66 34 100 34s60 24 60 66c0 50-24 92-60 92s-60-42-60-92z\" fill=\"#B07A55\"/><path d=\"M52 140c6 30 24 52 48 52s42-22 48-52c-8 8-20 12-30 12-6-8-12-10-18-10s-12 2-18 10c-10 0-22-4-30-12z\" fill=\"#2A1E1A\" opacity=\".16\"/><path d=\"M38 96c-4-40 22-72 62-72s68 30 62 72c-6-18-14-30-26-36-14 6-46 8-68 2-14 8-24 18-30 34z\" fill=\"#1F1A1A\"/><path d=\"M44 92c2-10 6-18 12-24\" stroke=\"#6b6b6b\" stroke-width=\"3\" fill=\"none\" opacity=\".6\"/><path d=\"M62 86q14-8 28-2M110 84q14-6 28 2\" stroke=\"#1F1A1A\" stroke-width=\"5\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"76\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"76\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><ellipse cx=\"124\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"124\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><path d=\"M100 100c-2 14-6 26-10 36 4 6 16 6 20 0-4-10-8-22-10-36\" fill=\"none\" stroke=\"#8E5F42\" stroke-width=\"2.4\" stroke-linejoin=\"round\"/><path d=\"M84 162q16 7 32 0\" stroke=\"#7A4637\" stroke-width=\"3.2\" stroke-linecap=\"round\" fill=\"none\"/><circle cx=\"100\" cy=\"74\" r=\"5\" fill=\"#3C5BA9\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"70\" cy=\"126\" r=\"5\" fill=\"#3C5BA9\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"130\" cy=\"126\" r=\"5\" fill=\"#3C5BA9\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"100\" cy=\"182\" r=\"5\" fill=\"#3C5BA9\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"100\" cy=\"116\" r=\"4\" fill=\"#3C5BA9\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"90\" cy=\"140\" r=\"7\" fill=\"none\" stroke=\"#C8463D\" stroke-width=\"2.4\" stroke-dasharray=\"3 2.2\"/><circle cx=\"110\" cy=\"140\" r=\"7\" fill=\"none\" stroke=\"#C8463D\" stroke-width=\"2.4\" stroke-dasharray=\"3 2.2\"/><circle cx=\"83\" cy=\"162\" r=\"7\" fill=\"none\" stroke=\"#C8463D\" stroke-width=\"2.4\" stroke-dasharray=\"3 2.2\"/><circle cx=\"117\" cy=\"162\" r=\"7\" fill=\"none\" stroke=\"#C8463D\" stroke-width=\"2.4\" stroke-dasharray=\"3 2.2\"/><circle cx=\"76\" cy=\"100\" r=\"13\" fill=\"none\" stroke=\"#C8463D\" stroke-width=\"2.4\" stroke-dasharray=\"3 2.2\"/><circle cx=\"124\" cy=\"100\" r=\"13\" fill=\"none\" stroke=\"#C8463D\" stroke-width=\"2.4\" stroke-dasharray=\"3 2.2\"/></svg>", "eye": "<svg viewBox=\"0 0 200 240\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"76\" y=\"168\" width=\"48\" height=\"72\" fill=\"#8E5F42\"/><ellipse cx=\"38\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><ellipse cx=\"162\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><path d=\"M40 100C40 58 66 34 100 34s60 24 60 66c0 50-24 92-60 92s-60-42-60-92z\" fill=\"#B07A55\"/><path d=\"M52 140c6 30 24 52 48 52s42-22 48-52c-8 8-20 12-30 12-6-8-12-10-18-10s-12 2-18 10c-10 0-22-4-30-12z\" fill=\"#2A1E1A\" opacity=\".16\"/><path d=\"M38 96c-4-40 22-72 62-72s68 30 62 72c-6-18-14-30-26-36-14 6-46 8-68 2-14 8-24 18-30 34z\" fill=\"#1F1A1A\"/><path d=\"M44 92c2-10 6-18 12-24\" stroke=\"#6b6b6b\" stroke-width=\"3\" fill=\"none\" opacity=\".6\"/><path d=\"M62 86q14-8 28-2M110 84q14-6 28 2\" stroke=\"#1F1A1A\" stroke-width=\"5\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"76\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"76\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><ellipse cx=\"124\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"124\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><path d=\"M100 100c-2 14-6 26-10 36 4 6 16 6 20 0-4-10-8-22-10-36\" fill=\"none\" stroke=\"#8E5F42\" stroke-width=\"2.4\" stroke-linejoin=\"round\"/><path d=\"M84 162q16 7 32 0\" stroke=\"#7A4637\" stroke-width=\"3.2\" stroke-linecap=\"round\" fill=\"none\"/><circle cx=\"60\" cy=\"112\" r=\"3.4\" fill=\"#B08D57\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"68\" cy=\"119\" r=\"3.4\" fill=\"#B08D57\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"78\" cy=\"122\" r=\"3.4\" fill=\"#B08D57\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"88\" cy=\"119\" r=\"3.4\" fill=\"#B08D57\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"112\" cy=\"119\" r=\"3.4\" fill=\"#B08D57\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"122\" cy=\"122\" r=\"3.4\" fill=\"#B08D57\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"132\" cy=\"119\" r=\"3.4\" fill=\"#B08D57\" stroke=\"#fff\" stroke-width=\"2\"/><circle cx=\"140\" cy=\"112\" r=\"3.4\" fill=\"#B08D57\" stroke=\"#fff\" stroke-width=\"2\"/></svg>", "spf": "<svg viewBox=\"0 0 200 240\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"76\" y=\"168\" width=\"48\" height=\"72\" fill=\"#8E5F42\"/><ellipse cx=\"38\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><ellipse cx=\"162\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><path d=\"M40 100C40 58 66 34 100 34s60 24 60 66c0 50-24 92-60 92s-60-42-60-92z\" fill=\"#B07A55\"/><path d=\"M52 140c6 30 24 52 48 52s42-22 48-52c-8 8-20 12-30 12-6-8-12-10-18-10s-12 2-18 10c-10 0-22-4-30-12z\" fill=\"#2A1E1A\" opacity=\".16\"/><path d=\"M38 96c-4-40 22-72 62-72s68 30 62 72c-6-18-14-30-26-36-14 6-46 8-68 2-14 8-24 18-30 34z\" fill=\"#1F1A1A\"/><path d=\"M44 92c2-10 6-18 12-24\" stroke=\"#6b6b6b\" stroke-width=\"3\" fill=\"none\" opacity=\".6\"/><path d=\"M62 86q14-8 28-2M110 84q14-6 28 2\" stroke=\"#1F1A1A\" stroke-width=\"5\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"76\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"76\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><ellipse cx=\"124\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"124\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><path d=\"M100 100c-2 14-6 26-10 36 4 6 16 6 20 0-4-10-8-22-10-36\" fill=\"none\" stroke=\"#8E5F42\" stroke-width=\"2.4\" stroke-linejoin=\"round\"/><path d=\"M84 162q16 7 32 0\" stroke=\"#7A4637\" stroke-width=\"3.2\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"100\" cy=\"124\" rx=\"56\" ry=\"66\" fill=\"#E0832F\" opacity=\"0.3\"/><ellipse cx=\"38\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#E0832F\" opacity=\"0.55\"/><ellipse cx=\"162\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#E0832F\" opacity=\"0.55\"/><rect x=\"76\" y=\"190\" width=\"48\" height=\"50\" fill=\"#E0832F\" opacity=\".45\"/></svg>", "cream": "<svg viewBox=\"0 0 200 240\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"76\" y=\"168\" width=\"48\" height=\"72\" fill=\"#8E5F42\"/><ellipse cx=\"38\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><ellipse cx=\"162\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><path d=\"M40 100C40 58 66 34 100 34s60 24 60 66c0 50-24 92-60 92s-60-42-60-92z\" fill=\"#B07A55\"/><path d=\"M52 140c6 30 24 52 48 52s42-22 48-52c-8 8-20 12-30 12-6-8-12-10-18-10s-12 2-18 10c-10 0-22-4-30-12z\" fill=\"#2A1E1A\" opacity=\".16\"/><path d=\"M38 96c-4-40 22-72 62-72s68 30 62 72c-6-18-14-30-26-36-14 6-46 8-68 2-14 8-24 18-30 34z\" fill=\"#1F1A1A\"/><path d=\"M44 92c2-10 6-18 12-24\" stroke=\"#6b6b6b\" stroke-width=\"3\" fill=\"none\" opacity=\".6\"/><path d=\"M62 86q14-8 28-2M110 84q14-6 28 2\" stroke=\"#1F1A1A\" stroke-width=\"5\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"76\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"76\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><ellipse cx=\"124\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"124\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><path d=\"M100 100c-2 14-6 26-10 36 4 6 16 6 20 0-4-10-8-22-10-36\" fill=\"none\" stroke=\"#8E5F42\" stroke-width=\"2.4\" stroke-linejoin=\"round\"/><path d=\"M84 162q16 7 32 0\" stroke=\"#7A4637\" stroke-width=\"3.2\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"100\" cy=\"124\" rx=\"56\" ry=\"66\" fill=\"#2E8B7A\" opacity=\"0.3\"/><rect x=\"76\" y=\"190\" width=\"48\" height=\"50\" fill=\"#2E8B7A\" opacity=\".35\"/></svg>", "shave": "<svg viewBox=\"0 0 200 240\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"76\" y=\"168\" width=\"48\" height=\"72\" fill=\"#8E5F42\"/><ellipse cx=\"38\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><ellipse cx=\"162\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><path d=\"M40 100C40 58 66 34 100 34s60 24 60 66c0 50-24 92-60 92s-60-42-60-92z\" fill=\"#B07A55\"/><path d=\"M52 140c6 30 24 52 48 52s42-22 48-52c-8 8-20 12-30 12-6-8-12-10-18-10s-12 2-18 10c-10 0-22-4-30-12z\" fill=\"#2A1E1A\" opacity=\".16\"/><path d=\"M38 96c-4-40 22-72 62-72s68 30 62 72c-6-18-14-30-26-36-14 6-46 8-68 2-14 8-24 18-30 34z\" fill=\"#1F1A1A\"/><path d=\"M44 92c2-10 6-18 12-24\" stroke=\"#6b6b6b\" stroke-width=\"3\" fill=\"none\" opacity=\".6\"/><path d=\"M62 86q14-8 28-2M110 84q14-6 28 2\" stroke=\"#1F1A1A\" stroke-width=\"5\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"76\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"76\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><ellipse cx=\"124\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"124\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><path d=\"M100 100c-2 14-6 26-10 36 4 6 16 6 20 0-4-10-8-22-10-36\" fill=\"none\" stroke=\"#8E5F42\" stroke-width=\"2.4\" stroke-linejoin=\"round\"/><path d=\"M84 162q16 7 32 0\" stroke=\"#7A4637\" stroke-width=\"3.2\" stroke-linecap=\"round\" fill=\"none\"/><rect x=\"76\" y=\"192\" width=\"48\" height=\"46\" fill=\"#3C5BA9\" opacity=\".4\"/><path d=\"M88 200v26\" stroke=\"#3C5BA9\" stroke-width=\"2.4\" marker-end=\"url(#dn)\"/><path d=\"M100 200v26\" stroke=\"#3C5BA9\" stroke-width=\"2.4\" marker-end=\"url(#dn)\"/><path d=\"M112 200v26\" stroke=\"#3C5BA9\" stroke-width=\"2.4\" marker-end=\"url(#dn)\"/><defs><marker id=\"dn\" viewBox=\"0 0 10 10\" refX=\"5\" refY=\"8\" markerWidth=\"5\" markerHeight=\"5\" orient=\"auto\"><path d=\"M0 0L10 5L0 10z\" fill=\"#3C5BA9\"/></marker></defs><ellipse cx=\"70\" cy=\"150\" rx=\"20\" ry=\"22\" fill=\"#E0832F\" opacity=\"0.3\"/><ellipse cx=\"130\" cy=\"150\" rx=\"20\" ry=\"22\" fill=\"#E0832F\" opacity=\"0.3\"/></svg>", "lip": "<svg viewBox=\"0 0 200 240\" class=\"sv\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"76\" y=\"168\" width=\"48\" height=\"72\" fill=\"#8E5F42\"/><ellipse cx=\"38\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><ellipse cx=\"162\" cy=\"112\" rx=\"10\" ry=\"17\" fill=\"#8E5F42\"/><path d=\"M40 100C40 58 66 34 100 34s60 24 60 66c0 50-24 92-60 92s-60-42-60-92z\" fill=\"#B07A55\"/><path d=\"M52 140c6 30 24 52 48 52s42-22 48-52c-8 8-20 12-30 12-6-8-12-10-18-10s-12 2-18 10c-10 0-22-4-30-12z\" fill=\"#2A1E1A\" opacity=\".16\"/><path d=\"M38 96c-4-40 22-72 62-72s68 30 62 72c-6-18-14-30-26-36-14 6-46 8-68 2-14 8-24 18-30 34z\" fill=\"#1F1A1A\"/><path d=\"M44 92c2-10 6-18 12-24\" stroke=\"#6b6b6b\" stroke-width=\"3\" fill=\"none\" opacity=\".6\"/><path d=\"M62 86q14-8 28-2M110 84q14-6 28 2\" stroke=\"#1F1A1A\" stroke-width=\"5\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"76\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"76\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><ellipse cx=\"124\" cy=\"100\" rx=\"11\" ry=\"5.5\" fill=\"#fff\"/><circle cx=\"124\" cy=\"100\" r=\"4.2\" fill=\"#2B1B14\"/><path d=\"M100 100c-2 14-6 26-10 36 4 6 16 6 20 0-4-10-8-22-10-36\" fill=\"none\" stroke=\"#8E5F42\" stroke-width=\"2.4\" stroke-linejoin=\"round\"/><path d=\"M84 162q16 7 32 0\" stroke=\"#7A4637\" stroke-width=\"3.2\" stroke-linecap=\"round\" fill=\"none\"/><ellipse cx=\"100\" cy=\"163\" rx=\"20\" ry=\"7\" fill=\"#C8463D\" opacity=\"0.45\"/></svg>"}, "tl": [[1, "The basics", "Gentle double cleanse, essence, Torriden, sunscreen every morning, lip balm. Lukewarm water and the new shaving routine."], [3, "Add the pigment serum", "Anua niacinamide + TXA every morning, after the essence."], [5, "Add BHA", "Anua BHA toner on Tuesday and Saturday nights."], [7, "Add azelaic acid", "Azclear in the morning. Week 7: Mon, Wed, Fri, Sun. Week 8 on: every morning."], [9, "Add retinal, slowly", "Purito retinal on Monday and Thursday nights."], [11, "Three retinal nights", "Monday, Wednesday and Friday."], [13, "Full routine", "Beauty of Joseon eye serum joins on retinal nights."], [17, "Optional 4th retinal night", "Sunday, if your skin is comfortable. Turn it on in the Me tab."]], "products": [["cleanser", "Round Lab 1025 Dokdo Cleanser", "Week 1", "https://wcosmetics.com.au/products/round-lab-1025-dokdo-cleanser-150ml"], ["oil", "Anua Heartleaf Cleansing Oil Mild", "Week 1", "https://wcosmetics.com.au/products/anua-hearleaf-pore-control-cleansing-oil-mild-200ml"], ["lotion", "Kanebo On Skin Essence V", "Week 1", ""], ["cream", "Torriden Dive-In Soothing Cream", "Week 1", "https://wcosmetics.com.au/products/torriden-dive-in-soothing-cream-100ml"], ["spf", "La Roche-Posay UVMune 400 SPF50+", "Week 1", ""], ["serum", "Anua x KDH Niacinamide 10% + TXA 3%", "Week 3", "https://wcosmetics.com.au/products/anua-x-kdh-niacinamide-10-txa-3-serum-50ml"], ["bha", "Anua BHA 2% Gentle Exfoliating Toner", "Week 5", "https://wcosmetics.com.au/products/anua-bha-2-gentle-exfoliating-toner-150ml"], ["azelaic", "Ego Azclear Action Lotion 20%", "Week 7", "https://www.chemistwarehouse.com.au/buy/61040/azclear-medicated-lotion-25g-pimples-acne"], ["retinal", "Purito Retinol Retinal 2000 NAD+", "Week 9", "https://wcosmetics.com.au/products/purito-retinol-retinal-2000-nad-serum-30ml"], ["eye", "Beauty of Joseon Revive Eye Serum", "Week 13", "https://wcosmetics.com.au/products/beauty-of-joseon-revive-eye-serum-ginseng-retinal-30ml"]]};
+(function(){
+"use strict";
+const KEY = "kskin-v1";
+const DEFAULTS = {name:"Kunjal", start:"2026-11-23", amTime:"06:45", pmTime:"21:30", fourth:false, days:{}};
+let mem = null;
+function load(){ try{ const s = localStorage.getItem(KEY); if(s) return Object.assign({}, DEFAULTS, JSON.parse(s)); }catch(e){} return mem ? mem : JSON.parse(JSON.stringify(DEFAULTS)); }
+function save(){ mem = state; try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+let state = load();
+try{ if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); }catch(e){}
+
+// ---------- dates
+const pad = n => String(n).padStart(2,"0");
+const ymd = d => d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+const parse = s => { const [y,m,d] = s.split("-").map(Number); return new Date(y, m-1, d); };
+const addDays = (s, n) => { const d = parse(s); d.setDate(d.getDate()+n); return ymd(d); };
+const diff = (a, b) => Math.round((parse(b) - parse(a)) / 864e5);
+const todayStr = () => ymd(new Date());
+const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const MON = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const nice = s => { const d = parse(s); return DOW[d.getDay()]+", "+d.getDate()+" "+MON[d.getMonth()].slice(0,3); };
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+// ---------- the plan's schedule
+function weekOf(s){ const n = diff(state.start, s); return n < 0 ? 0 : Math.floor(n/7)+1; }
+const dow = s => parse(s).getDay();
+function azelaicOn(s){ const w = weekOf(s); if(w < 7) return false; if(w === 7) return [1,3,5,0].includes(dow(s)); return true; }
+function bhaOn(s){ const d = dow(s); return weekOf(s) >= 5 && (d === 2 || d === 6); }
+function retinalOn(s){
+  const w = weekOf(s), d = dow(s); if(w < 9) return false;
+  if(w <= 10) return d === 1 || d === 4;
+  if(state.fourth && w >= 17 && d === 0) return true;
+  return d === 1 || d === 3 || d === 5;
+}
+function eyeOn(s){ return weekOf(s) >= 13 && retinalOn(s); }
+const SCHED = {azelaic: azelaicOn, bha: bhaOn, retinal: retinalOn, eye: eyeOn};
+function nightType(s){
+  if(retinalOn(s)) return "Retinal night";
+  if(bhaOn(s)) return "BHA night";
+  if(weekOf(s) >= 5) return "Rest night";
+  return "Basics night";
+}
+function dayRec(s){ return state.days[s] || {done:{}, shave:false, flare:false}; }
+function recFor(s){ return state.days[s] || (state.days[s] = {done:{}, shave:false, flare:false}); }
+function steps(r, s){
+  const w = Math.max(1, weekOf(s)), rec = dayRec(s);
+  return DATA.steps[r].filter(st => {
+    if(st.from_ > w) return false;
+    if(st.sched && !SCHED[st.sched](s)) return false;
+    if(st.shave && !rec.shave) return false;
+    return true;
+  });
+}
+function isDone(r, s){ const list = steps(r, s), rec = dayRec(s); return list.length > 0 && list.every(st => st.optional || rec.done[st.id]); }
+function cnt(r, s){ const rec = dayRec(s); let t=0,d=0; steps(r,s).forEach(st => { if(st.optional && !rec.done[st.id]) return; t++; if(rec.done[st.id]) d++; }); return [d,t]; }
+function frac(s){ const a = cnt("am",s), p = cnt("pm",s); const t = a[1]+p[1]; return t ? (a[0]+p[0])/t : 0; }
+function streakInfo(){
+  const t = todayStr(); let cur = 0, s = isDone("am",t) && isDone("pm",t) ? t : addDays(t,-1);
+  while(diff(state.start, s) >= 0 && isDone("am",s) && isDone("pm",s)){ cur++; s = addDays(s,-1); }
+  let best = 0, run = 0, full = 0, sun = 0;
+  for(let x = state.start; diff(x, t) >= 0; x = addDays(x,1)){
+    const a = isDone("am",x), p = isDone("pm",x); if(dayRec(x).done.spf) sun++;
+    if(a && p){ run++; full++; best = Math.max(best, run); } else run = 0;
+  }
+  return {cur, best, full, sun};
+}
+
+// ---------- ui helpers
+const $ = s => document.querySelector(s);
+const view = $("#view");
+let tab = "today", sel = todayStr(), seg = null, calMonth = null, sheetOpen = null, focus = null;
+const mine = {};
+function toast(msg){ const t = $("#toast"); t.textContent = msg; t.classList.add("on"); clearTimeout(toast.t); toast.t = setTimeout(()=>t.classList.remove("on"), 1800); }
+function buzz(){ try{ if(navigator.vibrate) navigator.vibrate(12); }catch(e){} }
+const I = {
+  check: (c="#fff", s=16) => '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+  sun: (c="currentColor", s=18) => '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6"/></svg>',
+  moon: (c="currentColor", s=18) => '<svg width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg>',
+  flame: '<svg width="16" height="16" viewBox="0 0 24 24" fill="#F2762E"><path d="M12 2c1 3.5 5 6 5 11a5 5 0 0 1-10 0c0-2.2 1-3.6 2-4.6.2 1.6 1 2.6 2 2.6 0-3.3-.5-6 1-9z"/></svg>',
+  left: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  right: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+  chev: '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>',
+  x: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  play: '<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15l13-7.5z"/></svg>',
+  bell: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>',
+  cam: (c="currentColor") => '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="'+c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
+  info: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5v.5"/></svg>',
+  razor: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="6" rx="1.5"/><path d="M9.5 8.5v11a2.5 2.5 0 0 0 5 0v-11"/></svg>',
+  back: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg>',
+  face: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><ellipse cx="12" cy="12" rx="7" ry="9"/><path d="M9.5 10v.5M14.5 10v.5M9.5 15.5c1.4 1 3.6 1 5 0"/></svg>',
+};
+function img(key){
+  if(mine[key]) return '<img alt="" src="'+mine[key]+'">';
+  if(DATA.photo[key]) return '<img alt="" loading="lazy" data-fb="'+key+'" src="'+DATA.photo[key]+'">';
+  return DATA.illo[key];
+}
+document.addEventListener("error", e => { const t = e.target; if(t && t.tagName === "IMG" && t.dataset && t.dataset.fb){ const span = document.createElement("span"); span.innerHTML = DATA.illo[t.dataset.fb]; t.replaceWith(span.firstChild); } }, true);
+function ring(f, sz, stroke, track, col){
+  const r = (sz-stroke)/2, c = 2*Math.PI*r;
+  return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 '+sz+' '+sz+'" aria-hidden="true"><circle cx="'+sz/2+'" cy="'+sz/2+'" r="'+r+'" fill="none" stroke="'+track+'" stroke-width="'+stroke+'"/>'+
+    (f>0?'<circle cx="'+sz/2+'" cy="'+sz/2+'" r="'+r+'" fill="none" stroke="'+col+'" stroke-width="'+stroke+'" stroke-linecap="round" stroke-dasharray="'+(c*Math.min(1,f))+' '+c+'" transform="rotate(-90 '+sz/2+' '+sz/2+')"/>':'')+'</svg>';
+}
+function curSeg(){
+  if(seg) return seg;
+  if(sel !== todayStr()) return isDone("am",sel) && !isDone("pm",sel) ? "pm" : "am";
+  return new Date().getHours() < 14 && !isDone("am",sel) ? "am" : "pm";
+}
+function hd(title, small){
+  const si = streakInfo();
+  return '<header class="hd"><div class="t"><small>'+esc(small)+'</small><h1>'+esc(title)+'</h1></div><span class="streak" aria-label="'+si.cur+' day streak">'+I.flame+si.cur+'</span></header>';
+}
+
+// ---------- TODAY
+function item(r, st, i, rec){
+  const done = !!rec.done[st.id];
+  return '<div class="item'+(done?" done":"")+'">'+
+    '<button class="chk" data-act="toggle" data-r="'+r+'" data-id="'+st.id+'" aria-pressed="'+done+'" aria-label="Mark '+esc(st.name)+' done">'+I.check()+'</button>'+
+    '<button class="th" data-act="open" data-r="'+r+'" data-id="'+st.id+'" aria-label="How to use '+esc(st.name)+'">'+img(st.key)+'</button>'+
+    '<button class="it" data-act="open" data-r="'+r+'" data-id="'+st.id+'"><small>'+(i+1)+' · '+esc(st.verb)+(st.optional?'<span class="opt">optional</span>':'')+(st.star?'<span class="star">KEY</span>':'')+'</small><b>'+esc(st.name)+'</b><span>'+esc(st.amount)+'</span></button>'+
+    '<button data-act="open" data-r="'+r+'" data-id="'+st.id+'" aria-label="Details" style="padding:8px 2px">'+I.chev+'</button></div>';
+}
+function weekStrip(){
+  const t = todayStr(), mon = addDays(sel, -((dow(sel)+6)%7)), wk = weekOf(sel);
+  let h = '<div class="week"><div class="weekhd"><div><b>'+(wk>0?"Week "+wk:"Before you start")+'</b> <span>· '+MON[parse(mon).getMonth()].slice(0,3)+' '+parse(mon).getFullYear()+'</span></div><div class="nav">'+
+    (sel!==t?'<button class="ib" data-act="pick" data-d="'+t+'" aria-label="Back to today" style="width:auto;padding:0 12px;font-size:13px;font-weight:700;color:var(--acc)">Today</button>':'')+
+    '<button class="ib" data-act="wk" data-n="-7" aria-label="Previous week">'+I.left+'</button><button class="ib" data-act="wk" data-n="7" aria-label="Next week" '+(addDays(mon,7)>t?"disabled":"")+'>'+I.right+'</button></div></div><div class="days">';
+  for(let i=0;i<7;i++){
+    const s = addDays(mon,i), fut = s > t, f = fut ? 0 : frac(s), on = s === sel;
+    const col = f >= 1 ? "#16A34A" : "#7C83FF";
+    h += '<button class="dp'+(on?" sel":"")+(fut?" fut":"")+(s===t?" today":"")+'" '+(fut?"disabled":'data-act="pick" data-d="'+s+'"')+' aria-label="'+nice(s)+'"><small>'+DOW[parse(s).getDay()].slice(0,1)+'</small><span class="rg">'+ring(f,36,3.5,on?"rgba(255,255,255,.25)":"rgba(118,118,128,.18)",on&&f<1?"#fff":col)+parse(s).getDate()+'</span></button>';
+  }
+  return h + '</div></div>';
+}
+function upcoming(w){
+  const all = DATA.steps.am.concat(DATA.steps.pm).filter(st => st.from_ > w).sort((a,b) => a.from_ - b.from_);
+  if(!all.length) return "";
+  const n = all[0], when = addDays(state.start, (n.from_-1)*7);
+  return '<div class="card coming"><span class="th">'+img(n.key)+'</span><div><b>New from '+nice(when)+'</b><span>'+esc(n.name)+' joins your '+(DATA.steps.am.includes(n)?"morning":"night")+' routine</span></div></div>';
+}
+function renderToday(){
+  const t = todayStr(), rec = dayRec(sel), w = weekOf(sel), r = curSeg();
+  const hr = new Date().getHours();
+  let h = hd(sel===t ? (hr<12?"Morning":hr<18?"Hi":"Evening")+", "+state.name : nice(sel), sel===t ? nice(sel) : "Looking back");
+  h += weekStrip();
+  const a = cnt("am",sel), p = cnt("pm",sel);
+  h += '<div class="seg" role="tablist"><button role="tab" aria-selected="'+(r==="am")+'" class="'+(r==="am"?"on":"")+'" data-act="seg" data-s="am">'+I.sun()+'Morning <i>'+(isDone("am",sel)?"✓":a[0]+"/"+a[1])+'</i></button><button role="tab" aria-selected="'+(r==="pm")+'" class="'+(r==="pm"?"on":"")+'" data-act="seg" data-s="pm">'+I.moon()+'Night <i>'+(isDone("pm",sel)?"✓":p[0]+"/"+p[1])+'</i></button></div>';
+  const list = steps(r, sel), [d, tot] = cnt(r, sel), done = isDone(r, sel);
+  const title = r === "am" ? "Morning routine" : "Night routine";
+  const tag = r === "am" ? (w >= 7 && !azelaicOn(sel) ? "No Azclear today" : "About 8 minutes") : nightType(sel);
+  h += '<div class="hero '+(done?"done":r)+' fade"><div class="hrow">'+
+    '<div style="position:relative;width:78px;height:78px;flex:none">'+ring(tot?d/tot:0,78,8,"rgba(255,255,255,.28)","#fff")+'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px">'+(done?I.check("#fff",30):d+"/"+tot)+'</div></div>'+
+    '<div style="min-width:0"><div class="lbl">'+(sel===t?"Today":nice(sel))+'</div><h2>'+(done?"All done":title)+'</h2><span class="tag">'+(r==="am"?I.sun("#fff",14):I.moon("#fff",14))+esc(tag)+'</span></div></div>'+
+    '<button class="cta" data-act="focus" data-r="'+r+'">'+(done?"Review the steps":I.play+(d>0?"Continue":"Start")+" step by step")+'</button></div>';
+  if(sel === t && !done){
+    const hm = pad(new Date().getHours())+":"+pad(new Date().getMinutes());
+    if(r==="am" && hm >= state.amTime && hm < "12:00") h += '<div class="nudge">'+I.sun("#F2762E",20)+'<span>Sunscreen before the bus walk. It\'s the step that matters most.</span></div>';
+    if(r==="pm" && hm >= state.pmTime) h += '<div class="nudge">'+I.moon("#7C83FF",20)+'<span>Routine time. Tonight is a <b>'+nightType(t).toLowerCase()+'</b>.</span></div>';
+  }
+  if(r === "pm"){
+    h += '<div class="pills"><button class="pill'+(rec.shave?" on":"")+'" data-act="shave" aria-pressed="'+!!rec.shave+'"><span class="dot"></span>Shaving tonight</button>'+
+      '<button class="pill'+(rec.flare?" on":"")+'" data-act="flare" aria-pressed="'+!!rec.flare+'"><span class="dot"></span>Nose crease flaring</button></div>';
+    if(rec.flare) h += '<div class="note" style="background:var(--rdt);color:var(--rdd)">'+I.info+'<span>Tonight, skip BHA and retinal on the nose creases, nostril edges and upper lip, and keep oil and rich cream off them. Everything else as normal. Not clearly better in 8 weeks? Show a pharmacist.</span></div>';
+  }
+  h += '<div class="sech">'+(r==="am"?"Morning":"Tonight's")+' steps · tap for how-to</div><div class="list '+r+'-c fade">'+list.map((st,i) => item(r, st, i, rec)).join("")+'</div>';
+  if(w < 13) h += upcoming(Math.max(1,w));
+  if(!(window.navigator.standalone || matchMedia("(display-mode: standalone)").matches)) h += '<div class="card"><h3>Add to Home Screen</h3><p>In Safari tap Share, then <b>Add to Home Screen</b>. It opens like an app and keeps your history safe.</p></div>';
+  view.innerHTML = h;
+}
+
+// ---------- product detail (sheet + guided mode share this)
+const FACECOL = {cleanse:"#F2762E", oil:"#4338CA", press:"#2E8B7A", serum:"#2E8B7A", azelaic:"#2E8B7A", cheeks:"#2E8B7A", bha:"#C8463D", retinal:"#3C5BA9", eye:"#B08D57", spf:"#E0832F", cream:"#2E8B7A", shave:"#3C5BA9", lip:"#C8463D"};
+function productBlock(r, st, opts){
+  const c = r === "am" ? "var(--am2)" : "var(--pm2)", cd = r === "am" ? "var(--amd)" : "var(--pmd)";
+  let h = '<div class="prod"><div class="ph">'+img(st.key)+'</div><small style="color:'+cd+'">'+(r==="am"?"Morning":"Night")+' · '+esc(st.verb)+(st.optional?" · optional":"")+'</small><h2>'+esc(st.name)+'</h2><span class="amtp">'+esc(st.amount)+'</span></div>'+
+    '<p class="does">'+esc(st.does)+'</p>'+
+    '<div class="sech">How to do it</div><ol class="steps list" style="--c:'+c+'">'+st.how.map(x => '<li>'+esc(x)+'</li>').join("")+'</ol>';
+  const showFace = !opts || opts.face;
+  if(st.face && showFace) h += '<div class="sech">Where it goes</div><div class="list facewrap">'+DATA.face[st.face]+'<b>'+esc(st.facecap)+'</b><div class="legend"><span><i style="background:'+FACECOL[st.face]+'"></i>Put it here</span><span><i style="border:2px dashed #C8463D"></i>Keep away</span></div></div>';
+  if(st.face && !showFace) h += '<button class="mine" data-act="fface">'+I.face+'Show where it goes on my face</button>';
+  if(st.tips && st.tips.length) h += '<div class="sech">Good to know</div><ul class="tips list">'+st.tips.map(x => '<li>'+esc(x)+'</li>').join("")+'</ul>';
+  return h;
+}
+function openSheet(r, id){
+  const st = DATA.steps[r].find(x => x.id === id); if(!st) return;
+  sheetOpen = {r, id};
+  const done = !!dayRec(sel).done[id];
+  let h = '<div class="grab"></div><button class="x" data-act="close" aria-label="Close">'+I.x+'</button>'+productBlock(r, st);
+  if(!st.nophoto && st.key !== "shave") h += '<label class="mine">'+I.cam()+(mine[st.key]?"Replace my photo of this product":"Use my own photo of this product")+'<input type="file" accept="image/*" data-pk="'+st.key+'"></label>';
+  h += '<button class="btn '+(done?"mut":"pri")+'" data-act="sheetdone">'+(done?"Mark as not done":I.check("#fff",18)+"Done")+'</button>';
+  const sh = $("#sheet"), keep = sh.classList.contains("on") ? sh.scrollTop : 0;
+  sh.innerHTML = h; sh.scrollTop = keep;
+  sh.classList.add("on"); $("#scrim").classList.add("on");
+}
+function closeSheet(){ sheetOpen = null; $("#sheet").classList.remove("on"); $("#scrim").classList.remove("on"); }
+
+// ---------- guided step-by-step mode
+function openFocus(r){
+  const list = steps(r, sel), rec = dayRec(sel);
+  let i = list.findIndex(st => !rec.done[st.id]); if(i < 0) i = 0;
+  focus = {r, ids: list.map(s => s.id), i, face:false, fin:false};
+  renderFocus(); $("#focus").classList.add("on");
+}
+function renderFocus(){
+  if(!focus) return;
+  const {r, ids, i} = focus, rec = dayRec(sel), c = r === "am" ? "var(--am2)" : "var(--pm2)";
+  const bars = ids.map((id,k) => '<i class="'+(rec.done[id]?"d":k===i&&!focus.fin?"c":"")+'"></i>').join("");
+  let h = '<div class="fhd" style="--c:'+c+'"><button class="ib" data-act="fprev" aria-label="Previous step" '+(i===0||focus.fin?"disabled":"")+'>'+I.back+'</button><div style="flex:1"><div class="bars">'+bars+'</div><div class="fcount">'+(focus.fin?"All done":(r==="am"?"Morning":"Night")+" · step "+(i+1)+" of "+ids.length)+'</div></div><button class="ib" data-act="fclose" aria-label="Close">'+I.x+'</button></div>';
+  if(focus.fin){
+    const si = streakInfo();
+    h += '<div class="fbody"><div class="fin"><div class="big">'+I.check("#fff",56)+'</div><h2>'+(r==="am"?"Morning done!":"Night done!")+'</h2><p>'+(r==="am"?"Have a great day. Your skin is protected.":"Sleep well. Your skin does its repair work overnight.")+'</p><span class="pillx">'+(si.cur>0?I.flame+si.cur+' day streak':(r==="am"?I.moon("currentColor",16)+"Night routine still to go":I.sun("currentColor",16)+"Tick off the morning to start a streak"))+'</span></div></div><div class="fft"><button class="btn pri" data-act="fclose">Close</button></div>';
+  } else {
+    const st = DATA.steps[r].find(x => x.id === ids[i]), done = !!rec.done[st.id];
+    h += '<div class="fbody fade">'+productBlock(r, st, {face: focus.face})+'</div>'+
+      '<div class="fft"><button class="btn mut" data-act="fskip">'+(st.optional?"Skip":"Later")+'</button><button class="btn pri" data-act="fdone">'+I.check("#fff",18)+(done?"Next":(i===ids.length-1?"Done":"Done, next"))+'</button></div>';
+  }
+  const f = $("#focus"); f.innerHTML = h; const b = f.querySelector(".fbody"); if(b) b.scrollTop = 0;
+}
+function focusNext(){
+  if(!focus) return;
+  const rec = dayRec(sel);
+  let n = focus.i + 1;
+  while(n < focus.ids.length && rec.done[focus.ids[n]]) n++;
+  if(n >= focus.ids.length){
+    if(isDone(focus.r, sel)){ focus.fin = true; confetti(); }
+    else {
+      const k = focus.ids.findIndex(id => !rec.done[id] && !(DATA.steps[focus.r].find(x => x.id === id) || {}).optional);
+      if(k >= 0 && k !== focus.i) focus.i = k; else { closeFocus(); toast("Saved. Finish the rest when you can"); return; }
+    }
+  } else focus.i = n;
+  focus.face = false; renderFocus();
+}
+function closeFocus(){ focus = null; $("#focus").classList.remove("on"); render(); }
+
+function setDone(r, id, val){
+  const rec = recFor(sel), was = isDone(r, sel);
+  if(val) rec.done[id] = 1; else delete rec.done[id];
+  save(); buzz();
+  return !was && isDone(r, sel);
+}
+function toggle(r, id){
+  const fin = setDone(r, id, !dayRec(sel).done[id]);
+  if(fin){ confetti(); toast(r === "am" ? "Morning routine done" : "Night routine done. Sleep well"); }
+  render();
+}
+
+// ---------- HISTORY
+const BADGES = [[3,"3 days"],[7,"1 week"],[14,"2 weeks"],[30,"30 days"],[60,"60 days"],[90,"90 days"],[180,"6 months"]];
+function renderHistory(){
+  const t = todayStr(), si = streakInfo();
+  if(!calMonth){ const d = parse(sel); calMonth = [d.getFullYear(), d.getMonth()]; }
+  let h = hd("History", "Your progress");
+  h += '<div class="stats"><div class="stat"><b>'+si.cur+'</b><span>Day streak</span></div><div class="stat"><b>'+si.best+'</b><span>Best streak</span></div><div class="stat"><b>'+si.sun+'</b><span>Sunscreen days</span></div></div>';
+  h += '<div class="sech" style="margin-top:6px">Badges · full days</div><div class="badges">'+BADGES.map(b => '<div class="badge'+(si.full>=b[0]?" got":"")+'"><div class="b">'+(si.full>=b[0]?'<svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12 2.8l2.4 5.6 6 .6-4.6 4 1.4 6L12 15.9 6.8 19l1.4-6-4.6-4 6-.6z"/></svg>':'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" stroke-width="2"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>')+'</div>'+b[1]+'</div>').join("")+'</div>';
+  const [y, m] = calMonth, first = new Date(y, m, 1), lead = (first.getDay()+6)%7, n = new Date(y, m+1, 0).getDate();
+  h += '<div class="card"><div class="calhead"><button class="ib" data-act="mon" data-n="-1" aria-label="Previous month">'+I.left+'</button><h3>'+MON[m]+' '+y+'</h3><button class="ib" data-act="mon" data-n="1" aria-label="Next month">'+I.right+'</button></div><div class="grid">';
+  ["M","T","W","T","F","S","S"].forEach(x => h += '<div class="dow">'+x+'</div>');
+  for(let i=0;i<lead;i++) h += '<div class="day out"></div>';
+  for(let dd=1; dd<=n; dd++){
+    const s = ymd(new Date(y, m, dd)), fut = s > t, a = isDone("am",s), p = isDone("pm",s);
+    h += '<button class="day'+(fut?" fut":"")+(s===t?" today":"")+(a&&p?" both":"")+'" '+(fut?"disabled":'data-act="goto" data-d="'+s+'"')+' aria-label="'+nice(s)+(a?", morning done":"")+(p?", night done":"")+'">'+dd+'<span class="dots"><i class="'+(a?"a":"")+'"></i><i class="'+(p?"p":"")+'"></i></span></button>';
+  }
+  h += '</div><div class="callegend"><span><i style="background:var(--am2)"></i>Morning</span><span><i style="background:var(--pm2)"></i>Night</span><span><i style="background:var(--grt);border:1px solid var(--gr)"></i>Both</span></div></div>';
+  h += '<p class="foot" style="margin-top:0">Tap any day to open it and tick off anything you forgot.</p>';
+  view.innerHTML = h;
+}
+
+// ---------- PLAN
+function renderPlan(){
+  const w = Math.max(1, weekOf(todayStr()));
+  let h = hd("Your plan", weekOf(todayStr())>0 ? "Week "+w : "Starts "+nice(state.start));
+  h += '<div class="card" style="background:linear-gradient(135deg,var(--pm1),var(--pm2));color:#fff;box-shadow:none"><h3 style="color:#fff">The app runs the schedule</h3><p style="color:rgba(255,255,255,.88)">New products appear on the right week, and it knows which nights are retinal, BHA or rest. Just follow Today.</p></div>';
+  h += '<div class="sech">Week by week</div><div class="tl">';
+  DATA.tl.forEach((x,i) => { const nx = DATA.tl[i+1] ? DATA.tl[i+1][0] : 999; const cls = w >= x[0] && w < nx ? "cur" : w >= nx ? "past" : "";
+    h += '<div class="tlr '+cls+'"><div class="tlw"><small>wk</small>'+x[0]+'</div><div class="tlb"><b>'+esc(x[1])+(cls==="cur"?'<span class="youhere">NOW</span>':'')+'</b><span>'+esc(x[2])+'</span></div></div>'; });
+  h += '</div>';
+  h += '<div class="sech">Always</div><div class="card"><ul class="rl"><li>Sunscreen every morning, even indoors</li><li>Lukewarm water on your face, never hot</li><li>Trim the neck to 0.5–1 mm, don\'t shave it close</li><li>One new product at a time</li></ul></div>';
+  h += '<div class="sech">Never</div><div class="card"><ul class="rl"><li>Retinal and BHA on the same night</li><li>Scrubs, brushes or nose strips</li><li>Bar soap or the mud wash on your face</li><li>Alcohol aftershave</li><li>Hydroquinone or imported "whitening" creams</li><li>Picking ingrowns or spots</li></ul></div>';
+  h += '<div class="sech">What to expect</div><div class="exp"><div><b>2 weeks</b>Less shine, fewer new ingrowns</div><div><b>1 month</b>Smoother, a little brighter</div><div><b>3 months</b>Fewer blackheads, marks fading</div><div><b>6 months</b>Spots clearly lighter</div><div style="grid-column:1/-1"><b>12 months</b>Your best realistic result: steady tone, healthy glow, slower ageing</div></div>';
+  h += '<div class="sech">My products</div><div class="list">'+DATA.products.map(p => '<div class="prow"><span class="th">'+img(p[0])+'</span><div class="it"><b>'+esc(p[1])+'</b><span>From '+p[2].toLowerCase()+'</span></div>'+(p[3]?'<a href="'+p[3]+'" target="_blank" rel="noopener">Buy</a>':'')+'</div>').join("")+'</div>';
+  h += '<p class="foot" style="margin-top:0">Stinging or peeling for more than a few days? Pause the newest product for a week, then restart more slowly.</p>';
+  view.innerHTML = h;
+}
+
+// ---------- ME
+const PH = [["0","Start"],["1","Month 1"],["3","Month 3"],["6","Month 6"],["12","Month 12"]];
+function renderMe(){
+  let h = hd("Settings", state.name);
+  h += '<div class="sech">Profile</div><div class="list"><label class="row">Name<input id="fName" value="'+esc(state.name)+'" autocomplete="off"></label><label class="row">Plan start<input id="fStart" type="date" value="'+state.start+'"></label></div>';
+  h += '<div class="sech">Reminders</div><div class="list"><label class="row">Morning<input id="fAm" type="time" value="'+state.amTime+'"></label><label class="row">Night<input id="fPm" type="time" value="'+state.pmTime+'"></label><button class="row linkrow" data-act="ics"><span>Add reminders to Calendar</span>'+I.bell+'</button></div>';
+  h += '<p class="foot">Adds daily alarms plus a monthly photo reminder to your iPhone Calendar, so they ring even when the app is closed. Tap, then <b>Add All</b>.</p>';
+  h += '<div class="sech">Retinal</div><div class="list"><button class="row" data-act="fourth" aria-pressed="'+!!state.fourth+'"><span>4th night on Sundays</span><i class="sw'+(state.fourth?" on":"")+'"></i></button></div><p class="foot">From week 17, only if 3 nights a week feels completely comfortable.</p>';
+  h += '<div class="sech">Progress photos</div><div class="list"><div class="photos">'+PH.map(p => '<div class="pp"><label for="ph'+p[0]+'" id="lab'+p[0]+'">'+I.cam("#A1A1AA")+'</label><input id="ph'+p[0]+'" type="file" accept="image/*" data-w="'+p[0]+'">'+p[1]+'</div>').join("")+'</div></div><p class="foot">Same window, daylight, about 9 am, bare skin. Photos stay on this phone.</p>';
+  h += '<div class="sech">Backup</div><div class="list"><button class="row linkrow" data-act="export">Save a backup file</button><label class="row linkrow" for="imp" style="cursor:pointer">Restore from a backup</label><input id="imp" type="file" accept="application/json,.json" style="display:none"></div>';
+  view.innerHTML = h;
+  PH.forEach(p => photoGet("m"+p[0]).then(u => { if(u){ const l = $("#lab"+p[0]); if(l) l.innerHTML = '<img alt="'+p[1]+' photo" src="'+u+'">'; } }));
+}
+
+// ---------- photos (IndexedDB)
+function db(){ return new Promise((res, rej) => { try{ const r = indexedDB.open("kskin-photos", 1); r.onupgradeneeded = () => r.result.createObjectStore("p"); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }catch(e){ rej(e); } }); }
+function photoGet(k){ return db().then(d => new Promise(res => { const q = d.transaction("p").objectStore("p").get(k); q.onsuccess = () => res(q.result); q.onerror = () => res(null); })).catch(() => null); }
+function photoPut(k, v){ return db().then(d => new Promise(res => { const tx = d.transaction("p","readwrite"); tx.objectStore("p").put(v, k); tx.oncomplete = () => res(true); tx.onerror = () => res(false); })).catch(() => false); }
+function shrink(file, max){ return new Promise(res => { const im = new Image(); im.onload = () => { const s = Math.min(1, max/Math.max(im.width, im.height)); const c = document.createElement("canvas"); c.width = im.width*s; c.height = im.height*s; c.getContext("2d").drawImage(im, 0, 0, c.width, c.height); res(c.toDataURL("image/jpeg", .82)); URL.revokeObjectURL(im.src); }; im.onerror = () => res(null); im.src = URL.createObjectURL(file); }); }
+Promise.all(Object.keys(DATA.illo).map(k => photoGet("prod-"+k).then(u => { if(u) mine[k] = u; }))).then(() => { if(Object.keys(mine).length) render(); });
+
+// ---------- reminders (.ics)
+function ics(){
+  const st = state.start.replace(/-/g,""), am = state.amTime.replace(":",""), pm = state.pmTime.replace(":",""), now = new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
+  const ev = (uid, t, rule, title, desc) => ["BEGIN:VEVENT","UID:"+uid+"@myskin","DTSTAMP:"+now,"DTSTART:"+st+"T"+t+"00","DURATION:PT10M","RRULE:"+rule,"SUMMARY:"+title,"DESCRIPTION:"+desc,"BEGIN:VALARM","ACTION:DISPLAY","DESCRIPTION:"+title,"TRIGGER:PT0M","END:VALARM","END:VEVENT"].join("\r\n");
+  return ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//MySkin//EN","CALSCALE:GREGORIAN",
+    ev("skin-am", am, "FREQ=DAILY", "Skin: morning routine + sunscreen", "Cleanse, treat, sunscreen before the bus. Open My Skin to tick it off."),
+    ev("skin-pm", pm, "FREQ=DAILY", "Skin: night routine", "Open My Skin to see if tonight is retinal, BHA or rest."),
+    ev("skin-photo", "0900", "FREQ=MONTHLY;BYDAY=1SU", "Skin: monthly progress photos", "Same window, daylight, bare skin. Add them in My Skin > Me."),
+    "END:VCALENDAR"].join("\r\n");
+}
+function download(name, text, type){
+  const blob = new Blob([text], {type}); const u = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 4000);
+}
+
+// ---------- confetti
+function confetti(){
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const cv = $("#confetti"), ctx = cv.getContext("2d"), W = cv.width = innerWidth, H = cv.height = innerHeight;
+  const cols = ["#FDBA4D","#7C83FF","#16A34A","#E5489D","#F2762E"];
+  const ps = Array.from({length:110}, () => ({x:W/2+(Math.random()-.5)*100, y:H*0.45, vx:(Math.random()-.5)*10, vy:-Math.random()*14-6, r:Math.random()*6+4, c:cols[Math.floor(Math.random()*5)], a:Math.random()*6}));
+  let f = 0;
+  (function tick(){ ctx.clearRect(0,0,W,H); ps.forEach(p => { p.vy += .35; p.x += p.vx; p.y += p.vy; p.a += .2; ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.a); ctx.fillStyle = p.c; ctx.fillRect(-p.r/2,-p.r/4,p.r,p.r/2); ctx.restore(); }); if(++f < 120) requestAnimationFrame(tick); else ctx.clearRect(0,0,W,H); })();
+}
+
+// ---------- render + events
+function render(){
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.toggle("on", b.dataset.tab === tab));
+  ({today:renderToday, history:renderHistory, plan:renderPlan, me:renderMe})[tab]();
+  if(sheetOpen) openSheet(sheetOpen.r, sheetOpen.id);
+}
+function setSel(s){ sel = s; seg = null; }
+document.addEventListener("click", e => {
+  const tb = e.target.closest(".tabs button"); if(tb){ tab = tb.dataset.tab; if(tab==="history") calMonth = null; render(); scrollTo(0,0); return; }
+  const el = e.target.closest("[data-act]"); if(!el) return;
+  const a = el.dataset.act;
+  if(a === "toggle") toggle(el.dataset.r, el.dataset.id);
+  else if(a === "open") openSheet(el.dataset.r, el.dataset.id);
+  else if(a === "close") closeSheet();
+  else if(a === "sheetdone"){ const o = sheetOpen; closeSheet(); toggle(o.r, o.id); }
+  else if(a === "seg"){ seg = el.dataset.s; render(); }
+  else if(a === "pick"){ setSel(el.dataset.d); render(); }
+  else if(a === "wk"){ let n = addDays(sel, +el.dataset.n); if(n > todayStr()) n = todayStr(); setSel(n); render(); }
+  else if(a === "shave"){ const r = recFor(sel); r.shave = !r.shave; if(!r.shave) delete r.done.shave; save(); render(); }
+  else if(a === "flare"){ const r = recFor(sel); r.flare = !r.flare; save(); render(); }
+  else if(a === "fourth"){ state.fourth = !state.fourth; save(); render(); }
+  else if(a === "mon"){ let [y,m] = calMonth; m += +el.dataset.n; if(m<0){m=11;y--;} if(m>11){m=0;y++;} calMonth = [y,m]; render(); }
+  else if(a === "goto"){ setSel(el.dataset.d); tab = "today"; render(); scrollTo(0,0); }
+  else if(a === "focus") openFocus(el.dataset.r);
+  else if(a === "fdone"){ setDone(focus.r, focus.ids[focus.i], true); focusNext(); }
+  else if(a === "fskip") focusNext();
+  else if(a === "fprev"){ if(focus && focus.i > 0){ focus.i--; focus.face = false; renderFocus(); } }
+  else if(a === "fface"){ focus.face = true; renderFocus(); }
+  else if(a === "fclose") closeFocus();
+  else if(a === "ics"){ download("my-skin-reminders.ics", ics(), "text/calendar"); }
+  else if(a === "export"){ download("my-skin-backup-"+todayStr()+".json", JSON.stringify(state, null, 1), "application/json"); toast("Backup saved"); }
+});
+$("#scrim").addEventListener("click", closeSheet);
+// swipe the week strip left/right
+let tx0 = null;
+document.addEventListener("touchstart", e => { tx0 = e.target.closest(".week") ? [e.touches[0].clientX, e.touches[0].clientY] : null; }, {passive:true});
+document.addEventListener("touchend", e => { if(!tx0) return; const dx = e.changedTouches[0].clientX - tx0[0], dy = e.changedTouches[0].clientY - tx0[1]; tx0 = null;
+  if(Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)*1.5){ let n = addDays(sel, dx < 0 ? 7 : -7); if(n > todayStr()) n = todayStr(); if(n !== sel){ setSel(n); render(); } } }, {passive:true});
+document.addEventListener("change", async e => {
+  const t = e.target;
+  if(t.id === "fName"){ state.name = t.value.trim() || "Kunjal"; save(); }
+  else if(t.id === "fStart" && t.value){ state.start = t.value; save(); toast("Start date updated"); }
+  else if(t.id === "fAm" && t.value){ state.amTime = t.value; save(); }
+  else if(t.id === "fPm" && t.value){ state.pmTime = t.value; save(); }
+  else if(t.dataset && t.dataset.w && t.files && t.files[0]){ const u = await shrink(t.files[0], 900); if(u){ await photoPut("m"+t.dataset.w, u); toast("Photo saved"); renderMe(); } }
+  else if(t.dataset && t.dataset.pk && t.files && t.files[0]){ const u = await shrink(t.files[0], 500); if(u){ mine[t.dataset.pk] = u; await photoPut("prod-"+t.dataset.pk, u); toast("Product photo saved"); render(); } }
+  else if(t.id === "imp" && t.files && t.files[0]){ try{ const o = JSON.parse(await t.files[0].text()); if(o && o.days){ state = Object.assign({}, DEFAULTS, o); save(); toast("Backup restored"); render(); } else toast("That file isn't a My Skin backup"); }catch(err){ toast("Couldn't read that file"); } }
+});
+document.addEventListener("keydown", e => { if(e.key === "Escape"){ if(focus) closeFocus(); else if(sheetOpen) closeSheet(); } });
+let lastToday = todayStr();
+document.addEventListener("visibilitychange", () => { if(!document.hidden){ const t = todayStr(); if(sel === lastToday || sel > t) setSel(t); lastToday = t; if(!focus) render(); } });
+render();
+if("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(()=>{});
+})();
+</script>
+</body>
+</html>
