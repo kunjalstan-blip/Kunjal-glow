@@ -353,6 +353,7 @@ const fmt = secs => secs >= 60 ? (secs/60)+" min" : secs+" sec";
 function thenInfo(r, st, list, s){
   const i = list.findIndex(x => x.id === st.id), nx = list[i+1];
   if(!nx){
+    if(st.id === "spf" && dayRec(s).home) return {secs:0, head:"Done. Morning finished", why:"No need to reapply today unless you head outside for more than a few minutes."};
     if(st.id === "spf") return {secs:0, head:"Done. Morning finished", why:"Give it at least 10 minutes before you walk out the door, so it's set before the sun hits it."};
     return {secs:0, head: r === "pm" ? "Done. Night finished" : "Done", why: r === "pm" ? "That's everything for tonight. Sleep well." : ""};
   }
@@ -386,7 +387,8 @@ function ctxNotes(st, s){
   if(st.id === "retinal" && weekOf(s) <= 10) n.push("Your first weeks on retinal. Tingling is normal. Stinging or peeling? Put a thin layer of cream on first, then the retinal, then cream again.");
   if(st.id === "cream_pm" && retinalOn(s)) n.push("Retinal night: add a little extra on any dry or flaky patches.");
   if(st.id === "azelaic" && weekOf(s) === 7) n.push("Warm-up week: Azclear only on Monday, Wednesday, Friday and Sunday mornings.");
-  if(st.id === "spf" && (dow(s) === 0 || dow(s) === 6)) n.push("Weekend: out, or on a long drive? Reapply every 2 hours.");
+  if(st.id === "spf" && rec.home) n.push("Working from home: still put it on. UVA comes through windows and is what darkens spots. A full amount, once, is enough.");
+  if(st.id === "spf" && !rec.home && (dow(s) === 0 || dow(s) === 6)) n.push("Weekend: out, or on a long drive? Reapply every 2 hours.");
   return n;
 }
 function dayRec(s){ return state.days[s] || {done:{}, shave:false, flare:false}; }
@@ -509,10 +511,10 @@ function renderToday(){
   }
   if(sel === t && !done){
     const hm = pad(new Date().getHours())+":"+pad(new Date().getMinutes());
-    if(r==="am" && hm >= state.amTime && hm < "12:00") h += '<div class="nudge">'+I.sun("#F2762E",20)+'<span>Sunscreen before the bus walk. It\'s the step that matters most.</span></div>';
+    if(r==="am" && hm >= state.amTime && hm < "12:00") h += '<div class="nudge">'+I.sun("#F2762E",20)+'<span>'+(rec.home ? 'Home today, but still put sunscreen on. UVA comes through windows and darkens spots.' : 'Sunscreen before the bus walk. It\'s the step that matters most.')+'</span></div>';
     if(r==="pm" && hm >= state.pmTime) h += '<div class="nudge">'+I.moon("#7C83FF",20)+'<span>Routine time. Tonight is a <b>'+nightType(t).toLowerCase()+'</b>.</span></div>';
   }
-  if(r === "am" && sel <= t) h += '<div class="pills"><button class="pill'+(rec.shave?" on":"")+'" data-act="shave" aria-pressed="'+!!rec.shave+'"><span class="dot"></span>Shaving today</button></div>';
+  if(r === "am" && sel <= t) h += '<div class="pills"><button class="pill'+(rec.shave?" on":"")+'" data-act="shave" aria-pressed="'+!!rec.shave+'"><span class="dot"></span>Shaving today</button><button class="pill'+(rec.home?" on":"")+'" data-act="home" aria-pressed="'+!!rec.home+'"><span class="dot"></span>Working from home</button></div>';
   if(r === "pm" && sel <= t){
     h += '<div class="pills"><button class="pill'+(rec.flare?" on":"")+'" data-act="flare" aria-pressed="'+!!rec.flare+'"><span class="dot"></span>Nose crease flaring</button></div>';
     if(rec.flare) h += '<div class="note" style="background:var(--rdt);color:var(--rdd)">'+I.info+'<span>Tonight, skip BHA and retinal on the nose creases, nostril edges and upper lip, and keep oil and rich cream off them. Everything else as normal. Not clearly better in 8 weeks? Show a pharmacist.</span></div>';
@@ -890,6 +892,7 @@ document.addEventListener("click", e => {
   else if(a === "pick"){ setSel(el.dataset.d); render(); }
   else if(a === "wk"){ setSel(addDays(sel, +el.dataset.n)); render(); }
   else if(a === "shave"){ const r = recFor(sel); r.shave = !r.shave; if(!r.shave) delete r.done.shave; save(); render(); }
+  else if(a === "home"){ const r = recFor(sel); r.home = !r.home; save(); render(); }
   else if(a === "flare"){ const r = recFor(sel); r.flare = !r.flare; save(); render(); }
   else if(a === "fourth"){ state.fourth = !state.fourth; save(); render(); }
   else if(a === "mon"){ let [y,m] = calMonth; m += +el.dataset.n; if(m<0){m=11;y--;} if(m>11){m=0;y++;} calMonth = [y,m]; render(); }
