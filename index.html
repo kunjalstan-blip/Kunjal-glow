@@ -200,6 +200,11 @@ ul.tips{margin:0;padding:12px 16px 12px 34px;font-size:15px;line-height:1.5;font
 .timer .nx .th{flex:0 0 40px;width:40px;height:40px;border-radius:11px}
 .timer .nx small{display:block;font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
 .timer .nx b{font-size:14.5px;font-weight:700}
+.tbtn{flex:none;display:inline-flex;align-items:center;gap:4px;font-weight:700;font-size:13px;color:var(--pmd);background:var(--pmt);padding:7px 10px;border-radius:999px;font-variant-numeric:tabular-nums}
+.am-c .tbtn{color:var(--amd);background:var(--amt)}
+.tbtn:active{transform:scale(.94)}
+.then .go{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:var(--pm2);color:#fff;font-weight:700;font-size:14.5px;padding:9px 14px;border-radius:12px}
+#tov{z-index:26}
 /* history */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .stat{background:var(--surf);border-radius:20px;padding:14px 8px;text-align:center;box-shadow:var(--shadow)}
@@ -245,6 +250,7 @@ ul.tips{margin:0;padding:12px 16px 12px 34px;font-size:15px;line-height:1.5;font
 .exp b{display:block;font-family:var(--disp);font-weight:800;font-size:17px;color:var(--ink);margin-bottom:2px}
 .prow{display:flex;align-items:center;gap:12px;padding:10px 14px;position:relative}
 .prow + .prow::before{content:"";position:absolute;left:78px;right:0;top:0;height:1px;background:var(--line)}
+.erow + .erow::before{left:14px}
 .prow .it b{font-size:15px}
 .prow a{font-weight:700;font-size:13.5px;color:var(--acc);background:var(--pmt);padding:7px 13px;border-radius:999px;text-decoration:none;flex:none}
 /* me */
@@ -281,6 +287,7 @@ ul.tips{margin:0;padding:12px 16px 12px 34px;font-size:15px;line-height:1.5;font
 <div class="scrim" id="scrim"></div>
 <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Product details"></section>
 <section class="focus" id="focus" role="dialog" aria-modal="true" aria-label="Guided routine"></section>
+<section class="focus" id="tov" role="dialog" aria-modal="true" aria-label="Timer"></section>
 <canvas id="confetti"></canvas>
 <div class="toast" id="toast"></div>
 <script>
@@ -449,8 +456,8 @@ function item(r, st, i, rec, list){
   return '<div class="item'+(done?" done":"")+'">'+
     (isFut(sel) ? '<span class="chk lock" aria-hidden="true"></span>' : '<button class="chk" data-act="toggle" data-r="'+r+'" data-id="'+st.id+'" aria-pressed="'+done+'" aria-label="Mark '+esc(st.name)+' done">'+I.check()+'</button>')+
     '<button class="th" data-act="open" data-r="'+r+'" data-id="'+st.id+'" aria-label="How to use '+esc(st.name)+'">'+img(st.key)+'</button>'+
-    '<button class="it" data-act="open" data-r="'+r+'" data-id="'+st.id+'"><small>'+(i+1)+' · '+esc(st.verb)+(st.optional?'<span class="opt">optional</span>':'')+(st.star?'<span class="star">KEY</span>':'')+'</small><b>'+esc(st.name)+'</b><span>'+esc(st.amount)+(w.secs?' · <em class="wt">'+I.clock+'wait '+fmt(w.secs)+'</em>':'')+'</span></button>'+
-    '<button data-act="open" data-r="'+r+'" data-id="'+st.id+'" aria-label="Details" style="padding:8px 2px">'+I.chev+'</button></div>';
+    '<button class="it" data-act="open" data-r="'+r+'" data-id="'+st.id+'"><small>'+(i+1)+' · '+esc(st.verb)+(st.optional?'<span class="opt">optional</span>':'')+(st.star?'<span class="star">KEY</span>':'')+'</small><b>'+esc(st.name)+'</b><span>'+esc(st.amount)+(w.secs&&isFut(sel)?' · <em class="wt">'+I.clock+'wait '+fmt(w.secs)+'</em>':'')+'</span></button>'+
+    (w.secs && !isFut(sel) ? '<button class="tbtn" data-act="timer" data-r="'+r+'" data-id="'+st.id+'" aria-label="Done, start '+fmt(w.secs)+' timer">'+I.clock+mmss(w.secs*1000)+'</button>' : '<button data-act="open" data-r="'+r+'" data-id="'+st.id+'" aria-label="Details" style="padding:8px 2px">'+I.chev+'</button>')+'</div>';
 }
 function weekStrip(){
   const t = todayStr(), mon = addDays(sel, -((dow(sel)+6)%7)), wk = weekOf(sel);
@@ -514,7 +521,7 @@ function productBlock(r, st, opts){
     ctxNotes(st, sel).map(x => '<div class="note ctx">'+I.info+'<span>'+esc(x)+'</span></div>').join("")+
     '<div class="sech">How to do it</div><ol class="steps list" style="--c:'+c+'">'+st.how.map(x => '<li>'+esc(x)+'</li>').join("")+'</ol>';
   const th = thenInfo(r, st, steps(r, sel), sel);
-  h += '<div class="then">'+I.timer+'<div><b>'+esc(th.head)+'</b>'+(th.why?'<p>'+esc(th.why)+'</p>':'')+(th.next?'<small>Next: '+esc(th.next.name)+'</small>':'')+'</div></div>';
+  h += '<div class="then">'+I.timer+'<div><b>'+esc(th.head)+'</b>'+(th.why?'<p>'+esc(th.why)+'</p>':'')+(th.next?'<small>Next: '+esc(th.next.name)+'</small>':'')+(th.secs && !opts && !isFut(sel)?'<button class="go" data-act="timer" data-r="'+r+'" data-id="'+st.id+'">'+I.clock+'Done, start '+fmt(th.secs)+' timer</button>':'')+'</div></div>';
   const showFace = !opts || opts.face;
   if(st.face && showFace) h += '<div class="sech">Where it goes</div><div class="list facewrap">'+DATA.face[st.face]+'<b>'+esc(st.facecap)+'</b><div class="legend"><span><i style="background:'+FACECOL[st.face]+'"></i>Put it here</span><span><i style="border:2px dashed #C8463D"></i>Keep away</span></div></div>';
   if(st.face && !showFace) h += '<button class="mine" data-act="fface">'+I.face+'Show where it goes on my face</button>';
@@ -607,6 +614,38 @@ function endWait(done){
   if(done){ beep(); toast("Time's up. On to the next step"); }
   focusNext();
 }
+let solo = null, soloTimer = null;
+function startSolo(r, id){
+  const st = DATA.steps[r].find(x => x.id === id); if(!st) return;
+  const info = thenInfo(r, st, steps(r, sel), sel); if(!info.secs) return;
+  if(!dayRec(sel).done[id]) setDone(r, id, true);
+  if(sheetOpen) closeSheet();
+  unlockAudio();
+  solo = {r, end: Date.now() + info.secs*1000, total: info.secs*1000, info};
+  try{ if(navigator.wakeLock) navigator.wakeLock.request("screen").then(l => wakeLock = l).catch(()=>{}); }catch(e){}
+  const c = r === "am" ? "#F2762E" : "#4338CA", nx = info.next;
+  $("#tov").innerHTML = '<div class="fhd"><div style="flex:1"><div class="fcount" style="text-align:left;padding:0 4px">'+(r==="am"?"Morning":"Night")+' · timer</div></div><button class="ib" data-act="sclose" aria-label="Close timer">'+I.x+'</button></div>'+
+    '<div class="fbody fade"><div class="timer"><div class="tr">'+ring(1,230,12,"rgba(118,118,128,.16)",c).replace('<circle cx="115" cy="115" r="109" fill="none" stroke="'+c+'"','<circle id="sarc" cx="115" cy="115" r="109" fill="none" stroke="'+c+'"')+'<div class="c"><span id="snum" style="font-family:var(--disp);font-size:58px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.03em;line-height:1">'+mmss(info.secs*1000)+'</span><small>wait</small></div></div>'+
+    '<h2>'+esc(info.head.replace("Then w","W"))+'</h2><p>'+esc(info.why)+'</p>'+
+    (nx ? '<div class="nx"><span class="th">'+img(nx.key)+'</span><div><small>Up next</small><b>'+esc(nx.name)+'</b></div></div>' : '')+'</div></div>'+
+    '<div class="fft"><button class="btn mut" data-act="splus">+1 min</button><button class="btn blue" data-act="sdone">I\'m ready</button></div>';
+  $("#tov").classList.add("on");
+  clearInterval(soloTimer); soloTimer = setInterval(tickSolo, 250); render();
+}
+function tickSolo(){
+  if(!solo) return;
+  const rem = solo.end - Date.now(), n = document.getElementById("snum"), a = document.getElementById("sarc");
+  if(n) n.textContent = mmss(rem);
+  if(a){ const c = 2*Math.PI*109; a.setAttribute("stroke-dasharray", (c*Math.max(0, rem)/solo.total)+" "+c); }
+  if(rem <= 0) endSolo(true);
+}
+function endSolo(rang){
+  clearInterval(soloTimer); soloTimer = null;
+  try{ if(wakeLock){ wakeLock.release(); wakeLock = null; } }catch(e){}
+  if(!solo) return;
+  const nx = solo.info.next; solo = null; $("#tov").classList.remove("on");
+  if(rang){ beep(); toast(nx ? "Time's up. Next: "+nx.name : "Time's up"); }
+}
 function closeFocus(){ clearInterval(waitTimer); waitTimer = null; try{ if(wakeLock){ wakeLock.release(); wakeLock = null; } }catch(e){} focus = null; $("#focus").classList.remove("on"); render(); }
 
 function setDone(r, id, val){
@@ -659,7 +698,16 @@ function renderPlan(){
   h += '</div>';
   h += '<div class="sech">Always</div><div class="card"><ul class="rl"><li>Sunscreen every morning, even indoors</li><li>Lukewarm water on your face, never hot</li><li>Trim the neck to 0.5–1 mm, don\'t shave it close</li><li>One new product at a time</li></ul></div>';
   h += '<div class="sech">Never</div><div class="card"><ul class="rl"><li>Retinal and BHA on the same night</li><li>Scrubs, brushes or nose strips</li><li>Bar soap on your face</li><li>The mud wash more than twice a week, or on a retinal night</li><li>Alcohol aftershave</li><li>Hydroquinone or imported "whitening" creams</li><li>Picking ingrowns or spots</li></ul></div>';
-  h += '<div class="sech">What to expect</div><div class="exp"><div><b>2 weeks</b>Less shine, fewer new ingrowns</div><div><b>1 month</b>Smoother, a little brighter</div><div><b>3 months</b>Fewer blackheads, marks fading</div><div><b>6 months</b>Spots clearly lighter</div><div style="grid-column:1/-1"><b>12 months</b>Your best realistic result: steady tone, healthy glow, slower ageing</div></div>';
+  const EXP = [
+    ["Nose and forehead shine","2–4 weeks","Noticeably less midday shine. It won't go fully matte; an oily T-zone is your skin type."],
+    ["Ingrown bumps on jaw and neck","4–8 weeks","Fewer new bumps from the shaving changes and Azclear. Old dark marks there fade over 3–6 months."],
+    ["Nose-crease flaking","2–6 weeks","Settles with gentle cleansing and no hot water. It can still flare now and then with stress or weather."],
+    ["Blackheads on the nose","2–3 months","Clearly fewer once BHA starts (week 5). They come back if you stop, so BHA stays for good."],
+    ["Pores on cheeks and nose","3–6 months","Look cleaner and a bit smaller. Pore size is mostly genetic, so think less noticeable, not gone."],
+    ["Dark spots on cheeks and forehead","3–6 months","Lighter by 3 months, roughly half as visible by 6. Some older sun spots fade but won't vanish. Missed sunscreen days undo progress fast."],
+    ["Under-eye darkness","3–6 months","The hardest one. Expect a small improvement only: a bit brighter and smoother. Much of it is natural pigment and shadow that creams can't remove."],
+    ["Overall tone and glow","3–12 months","More even and brighter in photos by month 3, steadily better through month 12. Same face, healthier skin."]];
+  h += '<div class="sech">What to expect, realistically</div><div class="list">'+EXP.map(e => '<div class="prow erow" style="align-items:flex-start"><div class="it"><b>'+e[0]+'</b><span style="color:var(--body)">'+e[2]+'</span></div><span class="tbtn" style="margin-top:2px">'+e[1]+'</span></div>').join("")+'</div><p class="foot" style="margin-top:0">Weeks 9–12 (retinal start) can look a little worse first: some dryness and a few spots. That settles. Compare your monthly photos, not the mirror.</p>';
   h += '<div class="sech">My products</div><div class="list">'+DATA.products.map(p => '<div class="prow"><span class="th">'+img(p[0])+'</span><div class="it"><b>'+esc(p[1])+'</b><span>From '+p[2].toLowerCase()+'</span></div>'+(p[3]?'<a href="'+p[3]+'" target="_blank" rel="noopener">Buy</a>':'')+'</div>').join("")+'</div>';
   h += '<p class="foot" style="margin-top:0">Stinging or peeling for more than a few days? Pause the newest product for a week, then restart more slowly.</p>';
   view.innerHTML = h;
@@ -743,6 +791,9 @@ document.addEventListener("click", e => {
     if(!was && info.secs > 0 && !isDone(focus.r, sel)) startWait(info); else focusNext();
   }
   else if(a === "tskip") endWait(false);
+  else if(a === "timer") startSolo(el.dataset.r, el.dataset.id);
+  else if(a === "sdone" || a === "sclose") endSolo(false);
+  else if(a === "splus"){ if(solo){ solo.end += 60000; solo.total += 60000; tickSolo(); } }
   else if(a === "tplus"){ if(focus && focus.wait){ focus.wait.end += 60000; focus.wait.total += 60000; tickWait(); } }
   else if(a === "fskip") focusNext();
   else if(a === "fprev"){ if(focus && focus.i > 0){ focus.i--; focus.face = false; renderFocus(); } }
@@ -769,7 +820,7 @@ document.addEventListener("change", async e => {
 });
 document.addEventListener("keydown", e => { if(e.key === "Escape"){ if(focus) closeFocus(); else if(sheetOpen) closeSheet(); } });
 let lastToday = todayStr();
-document.addEventListener("visibilitychange", () => { if(!document.hidden){ const t = todayStr(); if(sel === lastToday) setSel(t); lastToday = t; if(!focus) render(); } });
+document.addEventListener("visibilitychange", () => { if(!document.hidden){ tickSolo(); tickWait(); const t = todayStr(); if(sel === lastToday) setSel(t); lastToday = t; if(!focus) render(); } });
 render();
 if("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(()=>{});
 })();
