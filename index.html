@@ -61,7 +61,8 @@ h1,h2,h3{font-family:var(--disp);margin:0;letter-spacing:-.02em}
 .dp .rg svg{position:absolute;inset:0}
 .dp.sel{background:var(--ink);color:var(--bg)}
 .dp.sel small{color:var(--bg);opacity:.7}
-.dp.fut{opacity:.35}
+.dp.fut{opacity:.55}
+.dp.sel.fut{opacity:1}
 .dp.today:not(.sel) .rg,.dp.today:not(.sel) small{color:var(--acc)}
 /* segmented */
 .seg{display:grid;grid-template-columns:1fr 1fr;background:rgba(118,118,128,.12);border-radius:14px;padding:3px;margin-bottom:14px}
@@ -101,6 +102,7 @@ h1,h2,h3{font-family:var(--disp);margin:0;letter-spacing:-.02em}
 .chk svg{opacity:0;transform:scale(.5);transition:all .2s}
 .item.done .chk svg{opacity:1;transform:scale(1)}
 .chk:active{transform:scale(.88)}
+.chk.lock{opacity:.35;border-style:dashed}
 .th{flex:0 0 52px;width:52px;height:52px;border-radius:14px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,0,0,.06)}
 .th img{width:100%;height:100%;object-fit:contain}
 .th .sv{height:46px;width:auto}
@@ -158,6 +160,7 @@ ul.tips{margin:0;padding:12px 16px 12px 34px;font-size:15px;line-height:1.5;font
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px;border-radius:16px;font-weight:700;font-size:16px}
 .btn.pri{background:var(--gr);color:#fff}
 .btn.mut{background:rgba(118,118,128,.16);color:var(--ink)}
+.btn.blue{background:var(--pm2);color:#fff}
 .btn:active{transform:scale(.98)}
 .mine{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px;border-radius:16px;background:var(--surf);font-weight:600;font-size:15px;margin:14px 0 10px;cursor:pointer;color:var(--acc)}
 .mine input{display:none}
@@ -194,7 +197,9 @@ ul.tips{margin:0;padding:12px 16px 12px 34px;font-size:15px;line-height:1.5;font
 .dow{text-align:center;font-size:11px;font-weight:700;color:var(--muted);padding:4px 0}
 .day{aspect-ratio:1/1.1;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-weight:600;font-size:14px;position:relative}
 .day.out{visibility:hidden}
-.day.fut{color:var(--muted);opacity:.5}
+.day.fut{color:var(--body)}
+.nt{font-style:normal;font-size:9.5px;font-weight:800;color:#fff;border-radius:5px;padding:1px 4px;line-height:1.25}
+.newp{position:absolute;top:2px;right:3px;line-height:0}
 .day.today{box-shadow:inset 0 0 0 2px var(--acc)}
 .day.both{background:var(--grt)}
 .dots{display:flex;gap:3px}
@@ -202,6 +207,7 @@ ul.tips{margin:0;padding:12px 16px 12px 34px;font-size:15px;line-height:1.5;font
 .dots i.a{background:var(--am2)} .dots i.p{background:var(--pm2)}
 .callegend{display:flex;gap:14px;justify-content:center;font-size:12px;font-weight:600;color:var(--muted);margin-top:10px}
 .callegend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
+.callegend i.nt{width:auto;height:auto;border-radius:5px;margin-right:3px}
 /* plan */
 .tl{background:var(--surf);border-radius:22px;box-shadow:var(--shadow);padding:6px 16px;margin-bottom:14px}
 .tlr{display:flex;gap:14px;position:relative;padding:12px 0}
@@ -249,7 +255,7 @@ ul.tips{margin:0;padding:12px 16px 12px 34px;font-size:15px;line-height:1.5;font
 <div id="app"><div id="view"></div></div>
 <nav class="tabs" aria-label="Sections"><div class="in">
   <button data-tab="today" class="on"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg>Today</button>
-  <button data-tab="history"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>History</button>
+  <button data-tab="history"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15.5" rx="3.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Calendar</button>
   <button data-tab="plan"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.3 6.8 19.1l1-5.8L3.5 9.2l5.9-.8z"/></svg>Plan</button>
   <button data-tab="me"><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg>Me</button>
 </div></nav>
@@ -303,6 +309,9 @@ function nightType(s){
   if(weekOf(s) >= 5) return "Rest night";
   return "Basics night";
 }
+const isFut = s => s > todayStr();
+function nightChip(s){ if(weekOf(s) < 1) return null; if(retinalOn(s)) return ["R","#4338CA"]; if(bhaOn(s)) return ["B","#E5484D"]; if(mudOn(s)) return ["M","#B08D57"]; return null; }
+function startsOn(s){ return DATA.steps.am.concat(DATA.steps.pm).filter(st => st.from_ > 1 && addDays(state.start, (st.from_-1)*7) === s); }
 function dayRec(s){ return state.days[s] || {done:{}, shave:false, flare:false}; }
 function recFor(s){ return state.days[s] || (state.days[s] = {done:{}, shave:false, flare:false}); }
 function steps(r, s){
@@ -377,7 +386,7 @@ function hd(title, small){
 function item(r, st, i, rec){
   const done = !!rec.done[st.id];
   return '<div class="item'+(done?" done":"")+'">'+
-    '<button class="chk" data-act="toggle" data-r="'+r+'" data-id="'+st.id+'" aria-pressed="'+done+'" aria-label="Mark '+esc(st.name)+' done">'+I.check()+'</button>'+
+    (isFut(sel) ? '<span class="chk lock" aria-hidden="true"></span>' : '<button class="chk" data-act="toggle" data-r="'+r+'" data-id="'+st.id+'" aria-pressed="'+done+'" aria-label="Mark '+esc(st.name)+' done">'+I.check()+'</button>')+
     '<button class="th" data-act="open" data-r="'+r+'" data-id="'+st.id+'" aria-label="How to use '+esc(st.name)+'">'+img(st.key)+'</button>'+
     '<button class="it" data-act="open" data-r="'+r+'" data-id="'+st.id+'"><small>'+(i+1)+' · '+esc(st.verb)+(st.optional?'<span class="opt">optional</span>':'')+(st.star?'<span class="star">KEY</span>':'')+'</small><b>'+esc(st.name)+'</b><span>'+esc(st.amount)+'</span></button>'+
     '<button data-act="open" data-r="'+r+'" data-id="'+st.id+'" aria-label="Details" style="padding:8px 2px">'+I.chev+'</button></div>';
@@ -386,11 +395,11 @@ function weekStrip(){
   const t = todayStr(), mon = addDays(sel, -((dow(sel)+6)%7)), wk = weekOf(sel);
   let h = '<div class="week"><div class="weekhd"><div><b>'+(wk>0?"Week "+wk:"Before you start")+'</b> <span>· '+MON[parse(mon).getMonth()].slice(0,3)+' '+parse(mon).getFullYear()+'</span></div><div class="nav">'+
     (sel!==t?'<button class="ib" data-act="pick" data-d="'+t+'" aria-label="Back to today" style="width:auto;padding:0 12px;font-size:13px;font-weight:700;color:var(--acc)">Today</button>':'')+
-    '<button class="ib" data-act="wk" data-n="-7" aria-label="Previous week">'+I.left+'</button><button class="ib" data-act="wk" data-n="7" aria-label="Next week" '+(addDays(mon,7)>t?"disabled":"")+'>'+I.right+'</button></div></div><div class="days">';
+    '<button class="ib" data-act="wk" data-n="-7" aria-label="Previous week">'+I.left+'</button><button class="ib" data-act="wk" data-n="7" aria-label="Next week">'+I.right+'</button></div></div><div class="days">';
   for(let i=0;i<7;i++){
     const s = addDays(mon,i), fut = s > t, f = fut ? 0 : frac(s), on = s === sel;
     const col = f >= 1 ? "#16A34A" : "#7C83FF";
-    h += '<button class="dp'+(on?" sel":"")+(fut?" fut":"")+(s===t?" today":"")+'" '+(fut?"disabled":'data-act="pick" data-d="'+s+'"')+' aria-label="'+nice(s)+'"><small>'+DOW[parse(s).getDay()].slice(0,1)+'</small><span class="rg">'+ring(f,36,3.5,on?"rgba(255,255,255,.25)":"rgba(118,118,128,.18)",on&&f<1?"#fff":col)+parse(s).getDate()+'</span></button>';
+    h += '<button class="dp'+(on?" sel":"")+(fut?" fut":"")+(s===t?" today":"")+'" '+' data-act="pick" data-d="'+s+'" aria-label="'+nice(s)+'"><small>'+DOW[parse(s).getDay()].slice(0,1)+'</small><span class="rg">'+ring(f,36,3.5,on?"rgba(255,255,255,.25)":"rgba(118,118,128,.18)",on&&f<1?"#fff":col)+parse(s).getDate()+'</span></button>';
   }
   return h + '</div></div>';
 }
@@ -403,7 +412,7 @@ function upcoming(w){
 function renderToday(){
   const t = todayStr(), rec = dayRec(sel), w = weekOf(sel), r = curSeg();
   const hr = new Date().getHours();
-  let h = hd(sel===t ? (hr<12?"Morning":hr<18?"Hi":"Evening")+", "+state.name : nice(sel), sel===t ? nice(sel) : "Looking back");
+  let h = hd(sel===t ? (hr<12?"Morning":hr<18?"Hi":"Evening")+", "+state.name : nice(sel), sel===t ? nice(sel) : sel > t ? "Coming up" : "Looking back");
   h += weekStrip();
   const a = cnt("am",sel), p = cnt("pm",sel);
   h += '<div class="seg" role="tablist"><button role="tab" aria-selected="'+(r==="am")+'" class="'+(r==="am"?"on":"")+'" data-act="seg" data-s="am">'+I.sun()+'Morning <i>'+(isDone("am",sel)?"✓":a[0]+"/"+a[1])+'</i></button><button role="tab" aria-selected="'+(r==="pm")+'" class="'+(r==="pm"?"on":"")+'" data-act="seg" data-s="pm">'+I.moon()+'Night <i>'+(isDone("pm",sel)?"✓":p[0]+"/"+p[1])+'</i></button></div>';
@@ -411,15 +420,19 @@ function renderToday(){
   const title = r === "am" ? "Morning routine" : "Night routine";
   const tag = r === "am" ? (w >= 7 && !azelaicOn(sel) ? "No Azclear today" : "About 8 minutes") : nightType(sel);
   h += '<div class="hero '+(done?"done":r)+' fade"><div class="hrow">'+
-    '<div style="position:relative;width:78px;height:78px;flex:none">'+ring(tot?d/tot:0,78,8,"rgba(255,255,255,.28)","#fff")+'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px">'+(done?I.check("#fff",30):d+"/"+tot)+'</div></div>'+
-    '<div style="min-width:0"><div class="lbl">'+(sel===t?"Today":nice(sel))+'</div><h2>'+(done?"All done":title)+'</h2><span class="tag">'+(r==="am"?I.sun("#fff",14):I.moon("#fff",14))+esc(tag)+'</span></div></div>'+
-    '<button class="cta" data-act="focus" data-r="'+r+'">'+(done?"Review the steps":I.play+(d>0?"Continue":"Start")+" step by step")+'</button></div>';
+    '<div style="position:relative;width:78px;height:78px;flex:none">'+ring(tot?d/tot:0,78,8,"rgba(255,255,255,.28)","#fff")+'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px">'+(done?I.check("#fff",30):sel>t?tot:d+"/"+tot)+'</div></div>'+
+    '<div style="min-width:0"><div class="lbl">'+(sel===t?"Today":sel>t?"Preview":nice(sel))+'</div><h2>'+(done?"All done":title)+'</h2><span class="tag">'+(r==="am"?I.sun("#fff",14):I.moon("#fff",14))+esc(tag)+'</span></div></div>'+
+    '<button class="cta" data-act="focus" data-r="'+r+'">'+(done?"Review the steps":I.play+(sel>t?"Preview":d>0?"Continue":"Start")+" step by step")+'</button></div>';
+  if(sel > t){
+    const news = startsOn(sel);
+    h += '<div class="nudge">'+I.info+'<span>'+(news.length?'<b>New today:</b> '+news.map(x => esc(x.name)).join(", ")+'. ':'')+'This is a preview. You can tick things off on the day.</span></div>';
+  }
   if(sel === t && !done){
     const hm = pad(new Date().getHours())+":"+pad(new Date().getMinutes());
     if(r==="am" && hm >= state.amTime && hm < "12:00") h += '<div class="nudge">'+I.sun("#F2762E",20)+'<span>Sunscreen before the bus walk. It\'s the step that matters most.</span></div>';
     if(r==="pm" && hm >= state.pmTime) h += '<div class="nudge">'+I.moon("#7C83FF",20)+'<span>Routine time. Tonight is a <b>'+nightType(t).toLowerCase()+'</b>.</span></div>';
   }
-  if(r === "pm"){
+  if(r === "pm" && sel <= t){
     h += '<div class="pills"><button class="pill'+(rec.shave?" on":"")+'" data-act="shave" aria-pressed="'+!!rec.shave+'"><span class="dot"></span>Shaving tonight</button>'+
       '<button class="pill'+(rec.flare?" on":"")+'" data-act="flare" aria-pressed="'+!!rec.flare+'"><span class="dot"></span>Nose crease flaring</button></div>';
     if(rec.flare) h += '<div class="note" style="background:var(--rdt);color:var(--rdd)">'+I.info+'<span>Tonight, skip BHA and retinal on the nose creases, nostril edges and upper lip, and keep oil and rich cream off them. Everything else as normal. Not clearly better in 8 weeks? Show a pharmacist.</span></div>';
@@ -449,7 +462,7 @@ function openSheet(r, id){
   const done = !!dayRec(sel).done[id];
   let h = '<div class="grab"></div><button class="x" data-act="close" aria-label="Close">'+I.x+'</button>'+productBlock(r, st);
   if(!st.nophoto && st.key !== "shave") h += '<label class="mine">'+I.cam()+(mine[st.key]?"Replace my photo of this product":"Use my own photo of this product")+'<input type="file" accept="image/*" data-pk="'+st.key+'"></label>';
-  h += '<button class="btn '+(done?"mut":"pri")+'" data-act="sheetdone">'+(done?"Mark as not done":I.check("#fff",18)+"Done")+'</button>';
+  h += isFut(sel) ? '<p class="foot" style="text-align:center;margin:6px 0 4px">Preview for '+nice(sel)+'. Tick it off on the day.</p>' : '<button class="btn '+(done?"mut":"pri")+'" data-act="sheetdone">'+(done?"Mark as not done":I.check("#fff",18)+"Done")+'</button>';
   const sh = $("#sheet"), keep = sh.classList.contains("on") ? sh.scrollTop : 0;
   sh.innerHTML = h; sh.scrollTop = keep;
   sh.classList.add("on"); $("#scrim").classList.add("on");
@@ -459,27 +472,30 @@ function closeSheet(){ sheetOpen = null; $("#sheet").classList.remove("on"); $("
 // ---------- guided step-by-step mode
 function openFocus(r){
   const list = steps(r, sel), rec = dayRec(sel);
-  let i = list.findIndex(st => !rec.done[st.id]); if(i < 0) i = 0;
-  focus = {r, ids: list.map(s => s.id), i, face:false, fin:false};
+  const prev = isFut(sel);
+  let i = prev ? 0 : list.findIndex(st => !rec.done[st.id]); if(i < 0) i = 0;
+  focus = {r, ids: list.map(s => s.id), i, face:false, fin:false, prev};
   renderFocus(); $("#focus").classList.add("on");
 }
 function renderFocus(){
   if(!focus) return;
   const {r, ids, i} = focus, rec = dayRec(sel), c = r === "am" ? "var(--am2)" : "var(--pm2)";
   const bars = ids.map((id,k) => '<i class="'+(rec.done[id]?"d":k===i&&!focus.fin?"c":"")+'"></i>').join("");
-  let h = '<div class="fhd" style="--c:'+c+'"><button class="ib" data-act="fprev" aria-label="Previous step" '+(i===0||focus.fin?"disabled":"")+'>'+I.back+'</button><div style="flex:1"><div class="bars">'+bars+'</div><div class="fcount">'+(focus.fin?"All done":(r==="am"?"Morning":"Night")+" · step "+(i+1)+" of "+ids.length)+'</div></div><button class="ib" data-act="fclose" aria-label="Close">'+I.x+'</button></div>';
+  let h = '<div class="fhd" style="--c:'+c+'"><button class="ib" data-act="fprev" aria-label="Previous step" '+(i===0||focus.fin?"disabled":"")+'>'+I.back+'</button><div style="flex:1"><div class="bars">'+bars+'</div><div class="fcount">'+(focus.fin?"All done":(focus.prev?"Preview":r==="am"?"Morning":"Night")+" · step "+(i+1)+" of "+ids.length)+'</div></div><button class="ib" data-act="fclose" aria-label="Close">'+I.x+'</button></div>';
   if(focus.fin){
     const si = streakInfo();
     h += '<div class="fbody"><div class="fin"><div class="big">'+I.check("#fff",56)+'</div><h2>'+(r==="am"?"Morning done!":"Night done!")+'</h2><p>'+(r==="am"?"Have a great day. Your skin is protected.":"Sleep well. Your skin does its repair work overnight.")+'</p><span class="pillx">'+(si.cur>0?I.flame+si.cur+' day streak':(r==="am"?I.moon("currentColor",16)+"Night routine still to go":I.sun("currentColor",16)+"Tick off the morning to start a streak"))+'</span></div></div><div class="fft"><button class="btn pri" data-act="fclose">Close</button></div>';
   } else {
     const st = DATA.steps[r].find(x => x.id === ids[i]), done = !!rec.done[st.id];
     h += '<div class="fbody fade">'+productBlock(r, st, {face: focus.face})+'</div>'+
-      '<div class="fft"><button class="btn mut" data-act="fskip">'+(st.optional?"Skip":"Later")+'</button><button class="btn pri" data-act="fdone">'+I.check("#fff",18)+(done?"Next":(i===ids.length-1?"Done":"Done, next"))+'</button></div>';
+      (focus.prev ? '<div class="fft"><button class="btn mut" data-act="'+(i===0?"fclose":"fprev")+'">'+(i===0?"Close":"Back")+'</button><button class="btn blue" data-act="'+(i===ids.length-1?"fclose":"fskip")+'">'+(i===ids.length-1?"Finish preview":"Next")+'</button></div>' :
+      '<div class="fft"><button class="btn mut" data-act="fskip">'+(st.optional?"Skip":"Later")+'</button><button class="btn pri" data-act="fdone">'+I.check("#fff",18)+(done?"Next":(i===ids.length-1?"Done":"Done, next"))+'</button></div>');
   }
   const f = $("#focus"); f.innerHTML = h; const b = f.querySelector(".fbody"); if(b) b.scrollTop = 0;
 }
 function focusNext(){
   if(!focus) return;
+  if(focus.prev){ if(focus.i < focus.ids.length-1){ focus.i++; focus.face = false; renderFocus(); } else closeFocus(); return; }
   const rec = dayRec(sel);
   let n = focus.i + 1;
   while(n < focus.ids.length && rec.done[focus.ids[n]]) n++;
@@ -501,6 +517,7 @@ function setDone(r, id, val){
   return !was && isDone(r, sel);
 }
 function toggle(r, id){
+  if(isFut(sel)) return;
   const fin = setDone(r, id, !dayRec(sel).done[id]);
   if(fin){ confetti(); toast(r === "am" ? "Morning routine done" : "Night routine done. Sleep well"); }
   render();
@@ -511,19 +528,23 @@ const BADGES = [[3,"3 days"],[7,"1 week"],[14,"2 weeks"],[30,"30 days"],[60,"60 
 function renderHistory(){
   const t = todayStr(), si = streakInfo();
   if(!calMonth){ const d = parse(sel); calMonth = [d.getFullYear(), d.getMonth()]; }
-  let h = hd("History", "Your progress");
+  let h = hd("Calendar", "Past and upcoming");
   h += '<div class="stats"><div class="stat"><b>'+si.cur+'</b><span>Day streak</span></div><div class="stat"><b>'+si.best+'</b><span>Best streak</span></div><div class="stat"><b>'+si.sun+'</b><span>Sunscreen days</span></div></div>';
   h += '<div class="sech" style="margin-top:6px">Badges · full days</div><div class="badges">'+BADGES.map(b => '<div class="badge'+(si.full>=b[0]?" got":"")+'"><div class="b">'+(si.full>=b[0]?'<svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M12 2.8l2.4 5.6 6 .6-4.6 4 1.4 6L12 15.9 6.8 19l1.4-6-4.6-4 6-.6z"/></svg>':'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A1A1AA" stroke-width="2"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>')+'</div>'+b[1]+'</div>').join("")+'</div>';
   const [y, m] = calMonth, first = new Date(y, m, 1), lead = (first.getDay()+6)%7, n = new Date(y, m+1, 0).getDate();
   h += '<div class="card"><div class="calhead"><button class="ib" data-act="mon" data-n="-1" aria-label="Previous month">'+I.left+'</button><h3>'+MON[m]+' '+y+'</h3><button class="ib" data-act="mon" data-n="1" aria-label="Next month">'+I.right+'</button></div><div class="grid">';
   ["M","T","W","T","F","S","S"].forEach(x => h += '<div class="dow">'+x+'</div>');
   for(let i=0;i<lead;i++) h += '<div class="day out"></div>';
+  let anyFut = false;
   for(let dd=1; dd<=n; dd++){
-    const s = ymd(new Date(y, m, dd)), fut = s > t, a = isDone("am",s), p = isDone("pm",s);
-    h += '<button class="day'+(fut?" fut":"")+(s===t?" today":"")+(a&&p?" both":"")+'" '+(fut?"disabled":'data-act="goto" data-d="'+s+'"')+' aria-label="'+nice(s)+(a?", morning done":"")+(p?", night done":"")+'">'+dd+'<span class="dots"><i class="'+(a?"a":"")+'"></i><i class="'+(p?"p":"")+'"></i></span></button>';
+    const s = ymd(new Date(y, m, dd)), fut = s > t, a = !fut && isDone("am",s), p = !fut && isDone("pm",s), nc = nightChip(s), nw = startsOn(s).length;
+    if(fut) anyFut = true;
+    const mark = fut ? (nc ? '<i class="nt" style="background:'+nc[1]+'">'+nc[0]+'</i>' : '<span class="dots"><i style="opacity:.5"></i></span>') : '<span class="dots"><i class="'+(a?"a":"")+'"></i><i class="'+(p?"p":"")+'"></i></span>';
+    h += '<button class="day'+(fut?" fut":"")+(s===t?" today":"")+(a&&p?" both":"")+'" data-act="goto" data-d="'+s+'" aria-label="'+nice(s)+(a?", morning done":"")+(p?", night done":"")+(nc&&fut?", "+nightType(s):"")+(nw?", new product starts":"")+'">'+(nw?'<span class="newp">'+I.flame.replace('#F2762E','#16A34A').replace('width="16" height="16"','width="10" height="10"')+'</span>':'')+dd+mark+'</button>';
   }
-  h += '</div><div class="callegend"><span><i style="background:var(--am2)"></i>Morning</span><span><i style="background:var(--pm2)"></i>Night</span><span><i style="background:var(--grt);border:1px solid var(--gr)"></i>Both</span></div></div>';
-  h += '<p class="foot" style="margin-top:0">Tap any day to open it and tick off anything you forgot.</p>';
+  h += '</div><div class="callegend"><span><i style="background:var(--am2)"></i>Morning</span><span><i style="background:var(--pm2)"></i>Night</span><span><i style="background:var(--grt);border:1px solid var(--gr)"></i>Both</span></div>'+
+    (anyFut ? '<div class="callegend" style="margin-top:6px"><span><i class="nt" style="background:#4338CA">R</i> Retinal</span><span><i class="nt" style="background:#E5484D">B</i> BHA</span><span><i class="nt" style="background:#B08D57">M</i> Mud wash</span></div>' : '')+'</div>';
+  h += '<p class="foot" style="margin-top:0">Tap a past day to tick off anything you forgot, or a future day to preview it. A small green mark means a new product starts that day.</p>';
   view.innerHTML = h;
 }
 
@@ -608,7 +629,7 @@ document.addEventListener("click", e => {
   else if(a === "sheetdone"){ const o = sheetOpen; closeSheet(); toggle(o.r, o.id); }
   else if(a === "seg"){ seg = el.dataset.s; render(); }
   else if(a === "pick"){ setSel(el.dataset.d); render(); }
-  else if(a === "wk"){ let n = addDays(sel, +el.dataset.n); if(n > todayStr()) n = todayStr(); setSel(n); render(); }
+  else if(a === "wk"){ setSel(addDays(sel, +el.dataset.n)); render(); }
   else if(a === "shave"){ const r = recFor(sel); r.shave = !r.shave; if(!r.shave) delete r.done.shave; save(); render(); }
   else if(a === "flare"){ const r = recFor(sel); r.flare = !r.flare; save(); render(); }
   else if(a === "fourth"){ state.fourth = !state.fourth; save(); render(); }
@@ -628,7 +649,7 @@ $("#scrim").addEventListener("click", closeSheet);
 let tx0 = null;
 document.addEventListener("touchstart", e => { tx0 = e.target.closest(".week") ? [e.touches[0].clientX, e.touches[0].clientY] : null; }, {passive:true});
 document.addEventListener("touchend", e => { if(!tx0) return; const dx = e.changedTouches[0].clientX - tx0[0], dy = e.changedTouches[0].clientY - tx0[1]; tx0 = null;
-  if(Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)*1.5){ let n = addDays(sel, dx < 0 ? 7 : -7); if(n > todayStr()) n = todayStr(); if(n !== sel){ setSel(n); render(); } } }, {passive:true});
+  if(Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)*1.5){ setSel(addDays(sel, dx < 0 ? 7 : -7)); render(); } }, {passive:true});
 document.addEventListener("change", async e => {
   const t = e.target;
   if(t.id === "fName"){ state.name = t.value.trim() || "Kunjal"; save(); }
@@ -641,7 +662,7 @@ document.addEventListener("change", async e => {
 });
 document.addEventListener("keydown", e => { if(e.key === "Escape"){ if(focus) closeFocus(); else if(sheetOpen) closeSheet(); } });
 let lastToday = todayStr();
-document.addEventListener("visibilitychange", () => { if(!document.hidden){ const t = todayStr(); if(sel === lastToday || sel > t) setSel(t); lastToday = t; if(!focus) render(); } });
+document.addEventListener("visibilitychange", () => { if(!document.hidden){ const t = todayStr(); if(sel === lastToday) setSel(t); lastToday = t; if(!focus) render(); } });
 render();
 if("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(()=>{});
 })();
